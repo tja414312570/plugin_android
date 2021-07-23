@@ -6,6 +6,30 @@
 * 高度扩展
 * 注解开发
 * 轻量化
+
+## 使用
+* 在onCreate中调用Plugin.inject(this)
+## 支持的注解
+* 开发类
+** After 在某个注解执行之后执行，可用于多个注解时的排序，比如BindFragment需要在Views之后执行
+* 类型(Class)
+** ContextView 声明上下文试图
+** NoActionBar 声明不使用ActionBar
+* 属性（Field)
+** BindFragment 将Fragment添加到FragmentTransaction
+** Service 生成或获取对象或服务
+** Value 获取xml中的资源
+** Views 获取试图组件
+* 方法
+** AfterInjected 在Plugin的属性类注解执行完之后执行方法
+** BindEvent 绑定View的事件，一般用于替换setXXXListener
+** Click 绑定click事件
+** Drag 绑定Drag事件
+** LongClick 
+** Touch
+** Message 绑定消息
+** UserHandler 使用Handler的方式调用方法（与Message同时使用可以更新试图）
+
 ## 案例
 ```java
 package com.yanan.todo;
