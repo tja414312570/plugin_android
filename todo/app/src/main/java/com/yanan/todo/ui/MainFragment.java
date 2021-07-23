@@ -8,16 +8,21 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.amap.api.maps.MapView;
 import com.scwang.smart.refresh.footer.ClassicsFooter;
 import com.scwang.smart.refresh.header.ClassicsHeader;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
+import com.yanan.framework.fieldhandler.BindAdapter;
+import com.yanan.framework.fieldhandler.Service;
 import com.yanan.todo.R;
 import com.yanan.framework.Plugin;
 import com.yanan.framework.event.BindEvent;
 import com.yanan.framework.fieldhandler.Views;
 import com.yanan.framework.fieldhandler.ViewsHandler;
+import com.yanan.todo.ui.adapter.MainRecycleViewAdapter;
 
 public class MainFragment extends Fragment {
     private static final String TAG = "MAIN_FRAGMENT";
@@ -26,6 +31,11 @@ public class MainFragment extends Fragment {
     private View view;
     @Views(R.id.refreshLayout)
     private RefreshLayout refreshLayout;
+    @Views(R.id.recyclerView)
+    private RecyclerView recyclerView;
+    @BindAdapter(R.id.recyclerView)
+    @Service
+    private MainRecycleViewAdapter mainRecycleViewAdapter;
 
     @BindEvent(view = R.id.refreshLayout,event="OnRefreshListener")
     public void onRefresh(RefreshLayout refreshlayout){
@@ -45,18 +55,8 @@ public class MainFragment extends Fragment {
         mMapView.onCreate(savedInstanceState);
         refreshLayout.setRefreshHeader(new ClassicsHeader(getContext()));
         refreshLayout.setRefreshFooter(new ClassicsFooter(getContext()));
-//        refreshLayout.setOnRefreshListener(new OnRefreshListener() {
-//            @Override
-//            public void onRefresh(RefreshLayout refreshlayout) {
-//                refreshlayout.finishRefresh(2000/*,false*/);//传入false表示刷新失败
-//            }
-//        });
-//        refreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
-//            @Override
-//            public void onLoadMore(RefreshLayout refreshlayout) {
-//                refreshlayout.finishLoadMore(2000/*,false*/);//传入false表示加载失败
-//            }
-//        });
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(mainRecycleViewAdapter);
         return view;
     }
 

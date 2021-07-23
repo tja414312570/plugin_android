@@ -28,16 +28,9 @@ public class ServiceHandler implements FieldHandler<Service> {
         if(instanceHandler!= null){
             instance = instanceHandler.instance(activity,fieldType);
         }else{
-            try {
-                instance = Plugin.getInstance(fieldType);
-                if(instance == null){
-                    instance = fieldType.newInstance();
-                    Plugin.setInstance(fieldType,instance);
-                }
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InstantiationException e) {
-                e.printStackTrace();
+            instance = Plugin.getInstance(fieldType);
+            if(instance == null){
+                instance = Plugin.createInstance(fieldType,fieldType.getAnnotation(AutoInject.class) != null);
             }
         }
         Log.d(getClass().getSimpleName(),field+"==>"+instance);

@@ -5,6 +5,8 @@ import android.util.Log;
 
 import androidx.fragment.app.Fragment;
 
+import com.yanan.framework.fieldhandler.AutoInject;
+import com.yanan.framework.fieldhandler.Singleton;
 import com.yanan.util.CacheHashMap;
 import com.yanan.util.DexUtils;
 import com.yanan.util.ReflectUtils;
@@ -34,6 +36,8 @@ public class Plugin {
     //方法处理集合
     private static  Map<Class<? extends Annotation>,MethodHandler> methodHandlerMap = new HashMap<>();
 
+    private static ThreadLocal<Activity> currentActivity = new ThreadLocal<>();
+
     static final String TAG = "PLUGIN";
     static {
         try {
@@ -56,6 +60,23 @@ public class Plugin {
     public static <T> T getInstance(Class<?> clzz){
         return (T)instanceMap.get(clzz);
     }
+    public static <T> T createInstance(Class<T> clzz,boolean injected){
+        Object instance = null;
+        try {
+            instance = clzz.newInstance();
+            Singleton singleton = clzz.getAnnotation(Singleton.class);
+            if(singleton == null || singleton.value() == false)
+                Plugin.setInstance(clzz,instance);
+            if(clzz.getAnnotation(AutoInject.class) != null || injected){
+                Plugin.inject(currentActivity.get(),instance);
+            }
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        }
+        return (T) instance;
+    }
     public static void setInstance(Class<?> fieldType, Object instance) {
         instanceMap.puts(fieldType,instance);
     }
@@ -77,6 +98,7 @@ public class Plugin {
     public static void inject(Activity context,Object instance){
         Assert.isNotNull(context);
         Assert.isNotNull(instance);
+        currentActivity.set(context);
         injectClass(context,instance);
         Field[] fields = ReflectUtils.getAllFields(instance.getClass());
         Log.d(TAG,Arrays.toString(fields));

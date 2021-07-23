@@ -14,6 +14,7 @@ import com.chaychan.library.BottomBarItem;
 import com.chaychan.library.BottomBarLayout;
 import com.yanan.framework.event.BindEvent;
 import com.yanan.framework.fieldhandler.BindFragment;
+import com.yanan.framework.fieldhandler.MainFragment;
 import com.yanan.framework.message.MessageBus;
 import com.yanan.framework.methodhandler.AfterInjected;
 import com.yanan.framework.classhandler.ContextView;
@@ -23,7 +24,6 @@ import com.yanan.framework.fieldhandler.Service;
 import com.yanan.framework.fieldhandler.Value;
 import com.yanan.framework.fieldhandler.Views;
 import com.yanan.framework.event.Click;
-import com.yanan.todo.ui.MainFragment;
 import com.yanan.todo.ui.TestFragment;
 import com.yanan.util.ReflectUtils;
 
@@ -40,9 +40,10 @@ public class MainActivity extends AppCompatActivity implements BottomBarLayout.O
     @Service //使用plugin生成一个fragment对象
     @BindFragment(R.id.fragment) //绑定到fragment
     private TestFragment testFragment;
+    @MainFragment//表明当前Fragment为主Fragment
     @Service
     @BindFragment(R.id.fragment)
-    private MainFragment homeFragment;
+    private com.yanan.todo.ui.MainFragment homeFragment;
     @Value(R.string.app_name) //获取资源数据
     private String app_name;
     Toast toast;
@@ -50,6 +51,7 @@ public class MainActivity extends AppCompatActivity implements BottomBarLayout.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Plugin.inject(this);
+        fragmentManager.popBackStack(null,1);
         Log.d(TAG,"软件名称:"+app_name);
     }
     @AfterInjected
@@ -72,7 +74,6 @@ public class MainActivity extends AppCompatActivity implements BottomBarLayout.O
                 toast.cancel();String title = (String) ReflectUtils.getDeclaredFieldValue("title",bottomBarItem);
            final int timeout = 1000;
             toast = Toast.makeText(getApplicationContext(),title,timeout);
-
             toast.show();
             if(currentPosition == 0){
                 fragmentManager.beginTransaction().hide(testFragment)
