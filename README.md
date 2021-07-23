@@ -2,6 +2,10 @@
 为android的plugin框架提供注解开发支持
 
 # 开发与测试阶段 
+## 特性
+# 高度扩展
+# 注解开发
+# 轻量化
 ## 案例
 ```java
 package com.yanan.todo;
