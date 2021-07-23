@@ -1,0 +1,2 @@
+# plugin_android
+为android的plugin框架提供注解开发支持
