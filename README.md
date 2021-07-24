@@ -29,7 +29,60 @@
    * Touch
    * Message 绑定消息
    * UserHandler 使用Handler的方式调用方法（与Message同时使用可以更新试图）
+## 扩展
+1. 定义注解
+2. 依据注解类型实现各自的接口
+3. 通过static代码快注册实现
+```java
+package com.yanan.framework.event;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.METHOD} )
+public @interface Click {
+    int value();
+}
+```
+```java
+package com.yanan.framework.event;
+
+import android.app.Activity;
+import android.view.View;
+
+import com.yanan.framework.MethodHandler;
+import com.yanan.framework.Plugin;
+import com.yanan.framework.fieldhandler.ViewsHandler;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
+public class ClickHandler implements MethodHandler<Click> {
+    static {
+        Plugin.register(Click.class,new ClickHandler());
+    }
+    @Override
+    public void process(Activity activity, Object instance, Method method,Click click) {
+            View view = ViewsHandler.getView(activity,click.value());
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        method.invoke(instance,view);
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    } catch (InvocationTargetException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+    }
+}
+
+```
 ## 案例
 ```java
 package com.yanan.todo;
