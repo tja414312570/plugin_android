@@ -1,6 +1,7 @@
 package com.yanan.framework;
 
 import android.app.Activity;
+import android.content.Context;
 import android.util.Log;
 
 import androidx.fragment.app.Fragment;
@@ -9,6 +10,7 @@ import com.yanan.framework.fieldhandler.AutoInject;
 import com.yanan.framework.fieldhandler.Singleton;
 import com.yanan.util.CacheHashMap;
 import com.yanan.util.DexUtils;
+import com.yanan.util.ExtReflectUtils;
 import com.yanan.util.ReflectUtils;
 import com.yanan.util.TypeToken;
 import com.yanan.util.asserts.Assert;
@@ -16,7 +18,9 @@ import com.yanan.util.asserts.Assert;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.ref.WeakReference;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -28,15 +32,15 @@ import java.util.Map;
  */
 public class Plugin {
     //属性处理集合
-    private static Map<Class<? extends Annotation>,FieldHandler> handlerMap = new HashMap<>();
+    private static final Map<Class<? extends Annotation>,FieldHandler<? extends Annotation>> handlerMap = new HashMap<>();
     //类处理集合
-    private static Map<Class<? extends Annotation>,ClassHandler> classHandlerMap = new HashMap<>();
+    private static final Map<Class<? extends Annotation>,ClassHandler<? extends Annotation>> classHandlerMap = new HashMap<>();
     //实例缓存
-    private static CacheHashMap<Class<?>,Object> instanceMap = new CacheHashMap<>(new TypeToken<WeakReference<Object>>(){}.getTypeClass());
+    private static final CacheHashMap<Class<?>,Object> instanceMap = new CacheHashMap<>(new TypeToken<WeakReference<Object>>(){}.getTypeClass());
     //方法处理集合
-    private static  Map<Class<? extends Annotation>,MethodHandler> methodHandlerMap = new HashMap<>();
-
-    private static ThreadLocal<Activity> currentActivity = new ThreadLocal<>();
+    private static final Map<Class<? extends Annotation>,MethodHandler<? extends Annotation>> methodHandlerMap = new HashMap<>();
+    //上下文
+    private static final ThreadLocal<Context> currentActivity = new ThreadLocal<>();
 
     static final String TAG = "PLUGIN";
     static {
@@ -46,7 +50,7 @@ public class Plugin {
             Log.i(TAG,"  PPPPPPP      LL      UU     UU      GG   GGG        II      NN  NN NN    ");
             Log.i(TAG," PP           LL      UU     UU       GG     GG      II      NN   NNN      ");
             Log.i(TAG,"PP           LLLLLL    UUUUUU          GGGGGG GG   IIIIII   NN    NN       ");
-            Log.d(TAG,DexUtils.getClasses("com.yanan").toString());
+            loadPlugins("com.yanan");
         } catch (ClassNotFoundException e) {
             Log.e(TAG,"failed to init Plugin",e);
         } catch (IOException e) {
@@ -57,22 +61,32 @@ public class Plugin {
             Log.e(TAG,"failed to init Plugin",e);
         }
     }
-    public static <T> T getInstance(Class<?> clzz){
-        return (T)instanceMap.get(clzz);
+    public static void loadPlugins(String pack) throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException, IOException {
+        Log.d(TAG,"loaded plugins services:"+DexUtils.getClasses(pack).toString());
     }
-    public static <T> T createInstance(Class<T> clzz,boolean injected){
-        Object instance = null;
+    @SuppressWarnings("unchecked")
+    public static <T> T getInstance(Class<?> clazz){
+        return (T)instanceMap.get(clazz);
+    }
+    @SuppressWarnings("unchecked")
+    public static <T> T createInstance(Class<T> clazz,boolean injected,Object... args){
+        Object instance = instanceMap.get(clazz);
+        if(instance != null)
+            return (T) instance;
         try {
-            instance = clzz.newInstance();
-            Singleton singleton = clzz.getAnnotation(Singleton.class);
-            if(singleton == null || singleton.value() == false)
-                Plugin.setInstance(clzz,instance);
-            if(clzz.getAnnotation(AutoInject.class) != null || injected){
-                Plugin.inject(currentActivity.get(),instance);
+            Constructor<?> constructor = ExtReflectUtils.getEffectiveConstructor(clazz,args);
+            instance = constructor.newInstance(args);
+            Singleton singleton = clazz.getAnnotation(Singleton.class);
+            if(singleton == null || !singleton.value())
+                Plugin.setInstance(clazz,instance);
+            if(clazz.getAnnotation(AutoInject.class) != null || injected){
+                Plugin.inject((Activity) currentActivity.get(),instance);
             }
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
             e.printStackTrace();
         }
         return (T) instance;
@@ -89,8 +103,12 @@ public class Plugin {
     public static <T extends Annotation> void register(Class<T> type, MethodHandler<T> handler){
         methodHandlerMap.put(type,handler);
     }
+
     public static void inject(Activity context){
         inject(context,context);
+    }
+    public static void inject(Object instance) {
+        inject((Activity) currentActivity.get(),instance);
     }
     public static void inject(Fragment fragment) {
         inject(fragment.getActivity(),fragment);
@@ -112,15 +130,13 @@ public class Plugin {
         Class<?> classes = instance.getClass();
         Method[] methods = classes.getMethods();
         for(Method method : methods){
-            Annotation[] annotations = (method.getAnnotations());
-            if(annotations != null){
-                for(Annotation annotation : annotations){
-                    Class<? extends Annotation> annoType = annotation.annotationType();
-                    MethodHandler handler = methodHandlerMap.get(annoType);
-                    if(handler != null){
-                        Log.d(TAG,"Annotations "+annoType.getSimpleName()+" use handler "+handler.getClass());
-                        handler.process(context,instance,method,annotation);
-                    }
+            Annotation[] annotations = method.getAnnotations();
+            for(Annotation annotation : annotations){
+                Class<? extends Annotation> annoType = annotation.annotationType();
+                MethodHandler handler = methodHandlerMap.get(annoType);
+                if(handler != null){
+                    Log.d(TAG,"Annotations "+annoType.getSimpleName()+" use handler "+handler.getClass());
+                    handler.process(context,instance,method,annotation);
                 }
             }
         }
@@ -192,5 +208,9 @@ public class Plugin {
                 return i;
         }
         return -1;
+    }
+
+    public static Context currentContext() {
+        return currentActivity.get();
     }
 }

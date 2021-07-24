@@ -24,6 +24,8 @@ public class ParameterUtils{
 	 * @return 原始类型
 	 */
 	public static Class<?> patchBaseType(Object patchType) {
+		if(patchType == null)
+			return null;
 		// 无类型
 		if (patchType.getClass().equals(Void.class)) {
 			return void.class;

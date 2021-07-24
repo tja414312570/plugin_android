@@ -15,7 +15,7 @@ public class BindEventProxy implements InvocationHandler {
     private Method bindMethod;
     private BindEvent bindEvent;
     private Object instance;
-    private View view;
+    private Object view;
     private Class<?> listenerClass[];
 
     public Activity getActivity() {
@@ -26,7 +26,7 @@ public class BindEventProxy implements InvocationHandler {
         return listenerMethod;
     }
 
-    public BindEventProxy(Activity activity,Object instance,View view,  Method setListenerMethod, Method bindMethod, BindEvent bindEvent) {
+    public BindEventProxy(Activity activity,Object instance,Object view,  Method setListenerMethod, Method bindMethod, BindEvent bindEvent) {
         this.activity = activity;
         this.setListenerMethod = setListenerMethod;
         this.listenerClass = this.setListenerMethod.getParameterTypes();
@@ -50,7 +50,7 @@ public class BindEventProxy implements InvocationHandler {
     }
 
     public View getView() {
-        return view;
+        return (View) view;
     }
 
     @Override

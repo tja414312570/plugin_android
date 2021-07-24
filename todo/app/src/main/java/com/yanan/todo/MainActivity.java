@@ -29,7 +29,7 @@ import com.yanan.util.ReflectUtils;
 
 @ContextView(R.layout.activity_main)
 @NoActionBar
-public class MainActivity extends AppCompatActivity implements BottomBarLayout.OnItemSelectedListener {
+public class MainActivity extends AppCompatActivity {
     private static final String TAG = "Main_Activity";
     @Views(R.id.main_bottom_bar) //通过Plugin获取试图
     private BottomBarLayout mBottomBarLayout;
@@ -59,21 +59,17 @@ public class MainActivity extends AppCompatActivity implements BottomBarLayout.O
         Log.d("YA_NAN_PLUGIN","test method");
         System.err.println("YA_NAN");
     }
-    @SuppressLint("WrongConstant")
     @Click(R.id.fragment)
     public void onItemSelected(FrameLayout view){
-        toast = Toast.makeText(getApplicationContext(),"fragment 被点击",1000);
+        toast = Toast.makeText(getApplicationContext(),"fragment 被点击",Toast.LENGTH_SHORT);
         toast.show();
     }
     @BindEvent(view = R.id.main_bottom_bar,event = "OnItemSelectedListener")
-    @SuppressLint("WrongConstant")
-    @Override
     public void onItemSelected(BottomBarItem bottomBarItem, int previousPosition, int currentPosition) {
         try {
             if(toast != null)
                 toast.cancel();String title = (String) ReflectUtils.getDeclaredFieldValue("title",bottomBarItem);
-           final int timeout = 1000;
-            toast = Toast.makeText(getApplicationContext(),title,timeout);
+            toast = Toast.makeText(getApplicationContext(),title,Toast.LENGTH_SHORT);
             toast.show();
             if(currentPosition == 0){
                 fragmentManager.beginTransaction().hide(testFragment)

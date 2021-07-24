@@ -9,6 +9,7 @@ import java.lang.annotation.Target;
 @Target({ElementType.METHOD} )
 public @interface BindEvent {
     int view();
+    String field() default "";
     String event();
     Class<?> listener() default Object.class;
 }

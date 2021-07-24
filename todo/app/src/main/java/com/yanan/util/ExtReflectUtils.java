@@ -152,7 +152,16 @@ public class ExtReflectUtils {
 		StringBuilder errorMsg = buildNoSuchMsg(targetClass, CONSTRUCTOR, argsTypes);
 		throw new NoSuchMethodError(errorMsg.toString());
 	}
-
+	/**
+	 * 获取一个有效的构造器
+	 *
+	 * @param targetClass 要查找的类
+	 * @param argsTypes   参数类型
+	 * @return 找到的构造器
+	 */
+	public static Constructor<?> getEffectiveConstructor(Class<?> targetClass, Object[] argsTypes) {
+		return getEffectiveConstructor(targetClass,ParameterUtils.getParameterTypes(argsTypes));
+	}
 	/**
 	 * 获取一个合适的方法。匹配规则是参数可以转换为对应的参数
 	 * 

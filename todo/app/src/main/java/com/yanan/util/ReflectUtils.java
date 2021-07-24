@@ -527,7 +527,12 @@ public class ReflectUtils {
 	 */
 	public static <T> T getFieldValue(String fieldName, Object instance)
 			throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
-		Field field = instance.getClass().getField(fieldName);
+		Field field = null;
+		try{
+			field = instance.getClass().getField(fieldName);
+		} catch (NoSuchFieldException e) {
+			field = instance.getClass().getDeclaredField(fieldName);
+		}
 		return getFieldValue(field,instance);
 	}
 	/**

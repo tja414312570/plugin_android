@@ -38,11 +38,15 @@ public class ViewsHandler implements FieldHandler<Views> {
     }
     public static <T extends View> T getView(Activity activity,int resourceId){
         T view = null;
-        if(viewThreadLocal.get() != null){
-            view = viewThreadLocal.get().findViewById(resourceId);
-        }
-        if(view == null){
-            view = activity.findViewById(resourceId);
+        if(resourceId == 0){
+            view = (T) viewThreadLocal.get();
+        }else{
+            if(viewThreadLocal.get() != null){
+                view = viewThreadLocal.get().findViewById(resourceId);
+            }
+            if(view == null){
+                view = activity.findViewById(resourceId);
+            }
         }
         return view;
     }
