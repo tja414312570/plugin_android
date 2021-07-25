@@ -7,13 +7,11 @@
         android:id="@+id/map"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="#0f0"
         android:layout_weight="1"/>
     <com.scwang.smart.refresh.layout.SmartRefreshLayout
         android:id="@+id/refreshLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="#F00"
         android:layout_weight="1">
         <com.scwang.smart.refresh.header.ClassicsHeader
             android:layout_width="match_parent"
