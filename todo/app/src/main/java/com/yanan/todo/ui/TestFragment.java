@@ -33,7 +33,7 @@ public class TestFragment extends Fragment {
     @UseHandler
     @Message("TITLE")
     public void onTitleChange(String title){
-        textView.setText("宝宝我爱你:"+title);
+        textView.setText("来自消息:"+title);
     }
     @Override
     public void onResume() {

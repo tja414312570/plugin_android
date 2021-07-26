@@ -1,5 +1,9 @@
 package com.yanan.util;
 
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Parameter;
 import java.lang.reflect.ParameterizedType;
@@ -26,10 +30,6 @@ public class ParameterUtils{
 	public static Class<?> patchBaseType(Object patchType) {
 		if(patchType == null)
 			return null;
-		// 无类型
-		if (patchType.getClass().equals(Void.class)) {
-			return void.class;
-		}
 		// 整形
 		if (patchType.getClass().equals(Integer.class)) {
 			return int.class;
@@ -107,7 +107,7 @@ public class ParameterUtils{
 		}
 		// 布尔型
 		if (targetType.equals(boolean.class)) {
-			return orgin == null?false:Boolean.parseBoolean((String) orgin);
+			return orgin != null && Boolean.parseBoolean((String) orgin);
 		}
 		// char
 		if (targetType.equals(char.class)) {
@@ -217,9 +217,7 @@ public class ParameterUtils{
 			return true;
 		if (clzz.equals(Boolean[].class))
 			return true;
-		if (clzz.equals(Character[].class))
-			return true;
-		return false;
+		return clzz.equals(Character[].class);
 	}
 	/**
 	 * 判断类是否为可支持的基本无包裹类型
@@ -267,7 +265,7 @@ public class ParameterUtils{
 			return arg == null ? null : Integer.valueOf(arg);
 
 		if (clzz.equals(boolean.class))
-			return arg == null ? false : Boolean.parseBoolean(arg);
+			return arg != null && Boolean.parseBoolean(arg);
 		if (clzz.equals(Boolean.class))
 			return arg == null ? null : Boolean.valueOf(arg);
 
@@ -294,7 +292,7 @@ public class ParameterUtils{
 		if (clzz.equals(char.class))
 			return arg == null ? null : arg.charAt(0);
 		if (clzz.equals(Character.class))
-			return arg == null ? null : Character.valueOf(arg.charAt(0));
+			return arg == null ? null : arg.charAt(0);
 
 		if (clzz.equals(char[].class))
 			return arg == null ? null : arg.toCharArray();
@@ -354,12 +352,12 @@ public class ParameterUtils{
 	 * @return boolean
 	 */
 	public static boolean isNotNullType(Class<?> type) {
-		return type.equals(int.class)||
-			   type.equals(long.class)||
-			   type.equals(float.class)||
-			   type.equals(double.class)||
-			   type.equals(short.class)||
-			   type.equals(boolean.class)?true:false;
+		return type.equals(int.class) ||
+				type.equals(long.class) ||
+				type.equals(float.class) ||
+				type.equals(double.class) ||
+				type.equals(short.class) ||
+				type.equals(boolean.class);
 	}
 	/**
 	 * 获取field为List的泛型
@@ -368,11 +366,10 @@ public class ParameterUtils{
 	 */
 	public static Class<?> getListGenericType(Field field) {
 		Type genericType = field.getGenericType(); 
-		if(genericType != null && genericType instanceof ParameterizedType){   
+		if(genericType instanceof ParameterizedType){
 			ParameterizedType pt = (ParameterizedType) genericType;
 			//得到泛型里的class类型对象  
-			Class<?> genericClazz = (Class<?>)pt.getActualTypeArguments()[0]; 
-			return genericClazz;
+			return (Class<?>)pt.getActualTypeArguments()[0];
 		}   
 		return null;
 	}
@@ -381,13 +378,13 @@ public class ParameterUtils{
 	 * @param parm the parameter
 	 * @return generic type of the parameter
 	 */
+	@RequiresApi(api = Build.VERSION_CODES.O)
 	public static Class<?> getListGenericType(Parameter parm) {
-		Type genericType = parm.getParameterizedType(); 
-		if(genericType != null && genericType instanceof ParameterizedType){   
+		Type genericType = parm.getParameterizedType();
+		if(genericType instanceof ParameterizedType){
 			ParameterizedType pt = (ParameterizedType) genericType;
 			//得到泛型里的class类型对象  
-			Class<?> genericClazz = (Class<?>)pt.getActualTypeArguments()[0]; 
-			return genericClazz;
+			return (Class<?>)pt.getActualTypeArguments()[0];
 		}   
 		return null;
 	}

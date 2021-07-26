@@ -40,6 +40,6 @@ public class MainRecycleViewAdapter extends RecyclerView.Adapter<MainRecycleView
 
     @Override
     public int getItemCount() {
-        return 25;
+        return 1;
     }
 }

@@ -70,6 +70,7 @@ public class MethodHelper {
 	public Type[] getGenericExceptionTypes() {
 		return genericExceptionTypes;
 	}
+	@RequiresApi(api = Build.VERSION_CODES.O)
 	MethodHelper(Method method){
 		this.method = method;
 		this.modifiers = this.method.getModifiers();

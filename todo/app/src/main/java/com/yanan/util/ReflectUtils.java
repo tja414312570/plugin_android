@@ -1,5 +1,9 @@
 package com.yanan.util;
 
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -8,6 +12,7 @@ import java.lang.reflect.Parameter;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -75,7 +80,7 @@ public class ReflectUtils {
 	/**
 	 * 获得类下所有声明的属性
 	 * 
-	 * @param className 目标类
+	 * @param targetClass 目标类
 	 * @return 属性集合
 	 */
 	public static Field[] getAllFields(Class<?> targetClass) {
@@ -140,12 +145,10 @@ public class ReflectUtils {
 		List<Method> list = new ArrayList<>();
 		while (targetClass != null && !targetClass.equals(Object.class)) {
 			Method[] methods = targetClass.getDeclaredMethods();
-			for (Method method : methods) {
-				list.add(method);
-			}
+			Collections.addAll(list, methods);
 			targetClass = targetClass.getSuperclass();
 		}
-		return list.toArray(new Method[list.size()]);
+		return list.toArray(new Method[0]);
 	}
 
 	/**
@@ -183,7 +186,7 @@ public class ReflectUtils {
 			Class<?> loadClass = Class.forName(className);
 			loadClass.getDeclaredMethod(methodName, argTypes);
 			return true;
-		} catch (NoSuchMethodException e) {
+		} catch (NoSuchMethodException ignored) {
 		}
 		return false;
 	}
@@ -210,7 +213,7 @@ public class ReflectUtils {
 	 * 创建属性的suffix的方法，比如is,bool生成 isBool
 	 * 
 	 * @param suffix 前缀
-	 * @param field 属性名
+	 * @param fieldName 属性名
 	 * @return fieldName的xx方法
 	 */
 	public static String createFieldMethod(String suffix, String fieldName) {
@@ -493,7 +496,7 @@ public class ReflectUtils {
 	 * 获取属性的值
 	 * 
 	 * @param field         属性
-	 * @param proxyInstance 实例
+	 * @param instance 实例
 	 * @return 值
 	 * @throws IllegalArgumentException ex
 	 * @throws IllegalAccessException   ex
@@ -611,7 +614,7 @@ public class ReflectUtils {
 	 */
 	public static boolean isNotNullType(Class<?> type) {
 		return type.equals(int.class) || type.equals(long.class) || type.equals(float.class)
-				|| type.equals(double.class) || type.equals(short.class) || type.equals(boolean.class) ? true : false;
+				|| type.equals(double.class) || type.equals(short.class) || type.equals(boolean.class);
 	}
 
 	/**
@@ -622,11 +625,10 @@ public class ReflectUtils {
 	 */
 	public static Class<?> getListGenericType(Field field) {
 		Type genericType = field.getGenericType();
-		if (genericType != null && genericType instanceof ParameterizedType) {
+		if (genericType instanceof ParameterizedType) {
 			ParameterizedType pt = (ParameterizedType) genericType;
 			// 得到泛型里的class类型对象
-			Class<?> genericClazz = (Class<?>) pt.getActualTypeArguments()[0];
-			return genericClazz;
+			return (Class<?>) pt.getActualTypeArguments()[0];
 		}
 		return null;
 	}
@@ -634,16 +636,16 @@ public class ReflectUtils {
 	/**
 	 * 获取Parameter为List的泛型
 	 * 
-	 * @param 参数
+	 * @param param 参数
 	 * @return generic type of the parameter
 	 */
-	public static Class<?> getListGenericType(Parameter parm) {
-		Type genericType = parm.getParameterizedType();
-		if (genericType != null && genericType instanceof ParameterizedType) {
+	@RequiresApi(api = Build.VERSION_CODES.O)
+	public static Class<?> getListGenericType(Parameter param) {
+		Type genericType = param.getParameterizedType();
+		if (genericType instanceof ParameterizedType) {
 			ParameterizedType pt = (ParameterizedType) genericType;
 			// 得到泛型里的class类型对象
-			Class<?> genericClazz = (Class<?>) pt.getActualTypeArguments()[0];
-			return genericClazz;
+			return (Class<?>) pt.getActualTypeArguments()[0];
 		}
 		return null;
 	}
@@ -651,7 +653,7 @@ public class ReflectUtils {
 	/**
 	 * 获取数组的类型
 	 * 
-	 * @param 数组类
+	 * @param arrayClass 数组
 	 * @return the type of array
 	 */
 	public static Class<?> getArrayType(Class<?> arrayClass) {
@@ -671,8 +673,7 @@ public class ReflectUtils {
 	public static Class<?> getOuterClass(Class<?> targetClass) throws ClassNotFoundException {
 		String className = targetClass.getName();
 		className = className.substring(0, className.lastIndexOf('$'));
-		Class<?> outerClass = Class.forName(className);
-		return outerClass;
+		return Class.forName(className);
 	}
 
 	public static StackTraceElement getStackTraceElement(int i) {

@@ -54,8 +54,7 @@ public class LockSupports {
 		unLock(lock);
 	}
 	public static Thread getLockThread(Object lock) {
-		Thread threadLock = lockMap.get(lock);
-		return threadLock;
+		return lockMap.get(lock);
 	}
 	public static void unLock(Object lock) {
 		Thread thread =getLockThread(lock);
@@ -103,8 +102,7 @@ public class LockSupports {
 				Object entry = ReflectUtils.invokeMethod(map, entryMethod, threadLocal);
 				if(entry != null) {
 					Field valueField = ClassHelper.getClassHelper(entry.getClass()).getDeclaredField("value");
-					T result = ReflectUtils.getFieldValue(valueField, entry);
-					return result;
+					return ReflectUtils.getFieldValue(valueField, entry);
 				}
 			}
 		} catch (IllegalArgumentException | IllegalAccessException | InvocationTargetException e) {

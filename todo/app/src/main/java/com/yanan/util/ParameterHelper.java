@@ -1,5 +1,9 @@
 package com.yanan.util;
 
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Parameter;
 import java.util.HashMap;
@@ -24,6 +28,7 @@ public class ParameterHelper {
 	public Class<?> getType() {
 		return type;
 	}
+	@RequiresApi(api = Build.VERSION_CODES.O)
 	ParameterHelper(Parameter parameter){
 		this.parameter = parameter;
 		this.modifiers = parameter.getModifiers();

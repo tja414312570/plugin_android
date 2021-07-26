@@ -1,5 +1,7 @@
 package com.yanan.util;
 
+import java.util.Objects;
+
 /**
  * 资源管理工具，获取文件 支持多个ClassPath，支持自动查询主ClassPath
  * 
@@ -15,7 +17,7 @@ public class ResourceManager {
 	 */
 	public static String processPath(String path) {
 		//nt系统
-		if (System.getProperty("os.name").toUpperCase().indexOf("WINDOWS") != -1) {
+		if (Objects.requireNonNull(System.getProperty("os.name")).toUpperCase().contains("WINDOWS")) {
 			if(path.startsWith("/")) {
 				path = path.substring(1);
 			}else {

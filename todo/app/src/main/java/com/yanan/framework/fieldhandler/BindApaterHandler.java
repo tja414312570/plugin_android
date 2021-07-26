@@ -43,12 +43,12 @@ public class BindApaterHandler implements FieldHandler<BindAdapter> {
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     private Method getMethod(Class clzz, String setAdapter, Class<?> aClass) {
         Method[] methods = clzz.getMethods();
         for(Method method : methods){
             if(method.getName().equals(setAdapter)){
-                if(ExtReflectUtils.isEffectiveType(method.getParameters()[0].getType(),aClass)){
+
+                if(ExtReflectUtils.isEffectiveType(method.getParameterTypes()[0],aClass)){
                     return method;
                 }
             }

@@ -116,8 +116,8 @@ public class ExtReflectUtils {
 	public static Constructor<?> getEffectiveConstructor(Constructor<?>[] constructorList, Class<?>[] parameterTypes) {
 		// 遍历所有的构造器
 		con: for (Constructor<?> cons : constructorList) {
-			if ((parameterTypes == null && cons.getParameterCount() == 0)
-					|| parameterTypes.length != cons.getParameterCount())
+			if ((parameterTypes == null && cons.getParameterTypes().length== 0)
+					|| parameterTypes.length != cons.getParameterTypes().length)
 				continue con;
 			// 获取构造器的参数类型的集合
 			Class<?>[] argsTypes = cons.getParameterTypes();
@@ -145,7 +145,7 @@ public class ExtReflectUtils {
 	public static Constructor<?> getEffectiveConstructor(Class<?> targetClass, Class<?>[] argsTypes) {
 		Constructor<?>[] constructors = targetClass.getConstructors();
 		for (Constructor<?> constructor : constructors) {
-			if (constructor.getParameterCount() == argsTypes.length
+			if (constructor.getParameterTypes().length == argsTypes.length
 					&& isEffectiveTypes(constructor.getParameterTypes(), argsTypes))
 				return constructor;
 		}
@@ -173,7 +173,7 @@ public class ExtReflectUtils {
 		Method method = null;
 		// 遍历所有的构造器
 		con: for (Method cons : methods) {
-			if (cons.getParameterCount() != parameters.length)
+			if (cons.getParameterTypes().length != parameters.length)
 				continue con;
 			// 获取构造器的参数类型的集合
 			Class<?>[] parameterType = cons.getParameterTypes();
@@ -201,7 +201,7 @@ public class ExtReflectUtils {
 		Method method = null;
 		// 遍历所有的构造器
 		con: for (Method cons : methods) {
-			if (cons.getParameterCount() != parameterTypes.length)
+			if (cons.getParameterTypes().length != parameterTypes.length)
 				continue con;
 			// 获取构造器的参数类型的集合
 			Class<?>[] parameterTypeInMethod = cons.getParameterTypes();
@@ -232,7 +232,7 @@ public class ExtReflectUtils {
 		Method[] methods = ClassHelper.getClassHelper(targetClass).getMethods();
 		for (Method method : methods) {
 			if (method.getName().equals(methodName)) {
-				if (method.getParameterCount() == argsTypes.length
+				if (method.getParameterTypes().length == argsTypes.length
 						&& isEffectiveTypes(method.getParameterTypes(), argsTypes))
 					return method;
 			}
