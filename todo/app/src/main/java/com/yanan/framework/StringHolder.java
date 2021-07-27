@@ -38,10 +38,10 @@ public class StringHolder {
 
 		public Token(String token, String name, String attr,String args,  int type) {
 			super();
-			this.token = token;
-			this.name = name;
-			this.attr = attr;
-			this.args = args;
+			this.token = process(token);
+			this.name = process(name);
+			this.attr = process(attr);
+			this.args = process(args);
 			this.type = type;
 		}
 		public String getArgs() {
@@ -72,6 +72,14 @@ public class StringHolder {
         }
 
     }
+    private static String process(String args){
+		if(args == null)
+			return null;
+		return args.replace("\\{","{")
+				.replace("\\}","}")
+				.replace("\\@","@")
+				.replace("\\:",":");
+	}
     public static List<Token> getTokenList(String express){
 		List<Token> tokenList = tokenCache.get(express);
 		if(tokenList == null ){
