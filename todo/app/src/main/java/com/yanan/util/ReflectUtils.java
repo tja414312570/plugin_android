@@ -530,14 +530,35 @@ public class ReflectUtils {
 	 */
 	public static <T> T getFieldValue(String fieldName, Object instance)
 			throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
-		Field field = null;
-		try{
-			field = instance.getClass().getField(fieldName);
-		} catch (NoSuchFieldException e) {
-			field = instance.getClass().getDeclaredField(fieldName);
-		}
+		Field field = getField(instance,fieldName);
 		return getFieldValue(field,instance);
 	}
+
+	/**
+	 * 获取属性
+	 * @param instance
+	 * @param fieldName
+	 * @return
+	 * @throws NoSuchFieldException
+	 */
+	public static Field getField(Object instance, String fieldName) throws NoSuchFieldException {
+		Field field;
+		if(instance instanceof Class){
+			try{
+				field = ((Class)instance).getField(fieldName);
+			} catch (NoSuchFieldException e) {
+				field = ((Class)instance).getDeclaredField(fieldName);
+			}
+		}else{
+			try{
+				field = instance.getClass().getField(fieldName);
+			} catch (NoSuchFieldException e) {
+				field = instance.getClass().getDeclaredField(fieldName);
+			}
+		}
+		return field;
+	}
+
 	/**
 	 * 获取属性的值
 	 * 

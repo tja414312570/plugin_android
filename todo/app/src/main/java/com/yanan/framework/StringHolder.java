@@ -122,7 +122,7 @@ public class StringHolder {
 				}
 				result.append(value);
 			}else{
-				result.append(token.getName());
+				result.append(token.getToken());
 			}
 		}
         return result.toString();

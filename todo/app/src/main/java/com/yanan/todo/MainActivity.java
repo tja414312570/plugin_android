@@ -1,6 +1,7 @@
 package com.yanan.todo;
 
 import android.annotation.SuppressLint;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.FrameLayout;
@@ -12,9 +13,11 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.chaychan.library.BottomBarItem;
 import com.chaychan.library.BottomBarLayout;
+import com.yanan.framework.StringHolder;
 import com.yanan.framework.event.BindEvent;
 import com.yanan.framework.fieldhandler.BindFragment;
 import com.yanan.framework.fieldhandler.MainFragment;
+import com.yanan.framework.fieldhandler.SqlLite;
 import com.yanan.framework.message.MessageBus;
 import com.yanan.framework.methodhandler.AfterInjected;
 import com.yanan.framework.classhandler.ContextView;
@@ -26,6 +29,8 @@ import com.yanan.framework.fieldhandler.Views;
 import com.yanan.framework.event.Click;
 import com.yanan.todo.ui.TestFragment;
 import com.yanan.util.ReflectUtils;
+
+import java.sql.SQLData;
 
 @ContextView(R.layout.activity_main)
 @NoActionBar
@@ -46,13 +51,19 @@ public class MainActivity extends AppCompatActivity {
     private com.yanan.todo.ui.MainFragment homeFragment;
     @Value(R.string.app_name) //获取资源数据
     private String app_name;
+
+    @SqlLite("test.db")
+    private SQLiteDatabase sqLiteDatabase;
+    private String stringHolderTest;
     Toast toast;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Plugin.inject(this);
+        String app = StringHolder.decodeString("hello world {app_name}");
+        Toast.makeText(getApplication(),app,Toast.LENGTH_LONG);
         fragmentManager.popBackStack(null,1);
-        Log.d(TAG,"软件名称:"+app_name);
+        Log.d(TAG,"软件名称:"+app_name+","+app);
     }
     @AfterInjected
     public void onInited(){
