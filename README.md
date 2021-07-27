@@ -19,6 +19,7 @@
    * BindFragment 将Fragment添加到FragmentTransaction
    * Service 生成或获取对象或服务
    * Value 获取xml中的资源
+   * Values 字符占位符解析
    * Views 获取试图组件
 * 方法(Method)
    * AfterInjected 在Plugin的属性类注解执行完之后执行方法
@@ -29,6 +30,19 @@
    * Touch
    * Message 绑定消息
    * UserHandler 使用Handler的方式调用方法（与Message同时使用可以更新试图）
+   
+## API
+* Plugin.inject(Activity activity) 注入activtiy
+* Plugin.inject(Fragment fragment) 注入fragment
+* Plugin.inject(Context context,Object instance) 注入一个实例
+* ViewsHolder.setContextView(View view) 设置试图解析器的上下文
+* Plugin.currentContext() 获取当前的Context
+* Plugin.register(Class<? extends Annotation> anno,xxxHandler<? extends Annotation> handler) 注册某一类型的handler
+* StringHolder.decodeString(String express) 解析字符表达式
+* Plugin.createInstance(Class<T> clazz,boolean injected,Object... args) 创建一个实例，injected为是否需要在创建后立即注入，args为参数
+* MessageBus.push() 消息同步推送相关api
+* MessageBus.pushAsync() 异步推送消息相关api
+* MessageBus.reject() 拒绝接收当前消息
 ## 扩展
 1. 定义注解
 2. 依据注解类型实现各自的接口
