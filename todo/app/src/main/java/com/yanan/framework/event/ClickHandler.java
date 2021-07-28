@@ -17,15 +17,21 @@ public class ClickHandler implements MethodHandler<Click> {
     @Override
     public void process(Activity activity, Object instance, Method method,Click click) {
             View view = ViewsHandler.getView(activity,click.value());
+            final Synchronized synchronised = method.getAnnotation(Synchronized.class);
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    boolean required = synchronised != null ?  EventContext.require(Click.class,view) : false;
                     try {
-                        method.invoke(instance,view);
+                        if(required)
+                            method.invoke(instance,view);
                     } catch (IllegalAccessException e) {
                         e.printStackTrace();
                     } catch (InvocationTargetException e) {
                         e.printStackTrace();
+                    }finally {
+//                        if(required)
+//                            EventContext.completedFilter(Click.class,view);
                     }
                 }
             });

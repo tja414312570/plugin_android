@@ -19,6 +19,7 @@ import com.yanan.framework.classhandler.ContextView;
 import com.yanan.framework.classhandler.NoActionBar;
 import com.yanan.framework.event.BindEvent;
 import com.yanan.framework.event.Click;
+import com.yanan.framework.event.EventContext;
 import com.yanan.framework.fieldhandler.BindFragment;
 import com.yanan.framework.fieldhandler.MainFragment;
 import com.yanan.framework.fieldhandler.Service;
@@ -41,6 +42,7 @@ public class FormActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Plugin.inject(this);
+        EventContext.completedEvent();
         Toast.makeText(getApplication(),app_names,Toast.LENGTH_SHORT).show();
 
     }

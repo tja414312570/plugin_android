@@ -19,19 +19,23 @@ public class TouchHandler implements MethodHandler<Touch> {
     @Override
     public void process(Activity activity, Object instance, Method method,Touch event) {
         View view = ViewsHandler.getView(activity,event.value());
+        final Synchronized synchronised = method.getAnnotation(Synchronized.class);
             view.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
-                    try{
-                        Object result =  ReflectUtils.invokeMethod(instance,method,view,event);
-                        if(method.getReturnType().equals(boolean.class)||method.getReturnType().equals(Boolean.class))
-                            return (boolean) result;
+                    boolean required = synchronised != null ?  EventContext.require(Click.class,view) : false;
+                    try {
+                        if(required){
+                            Object result =  ReflectUtils.invokeMethod(instance,method,view,event);
+                            if(method.getReturnType().equals(boolean.class)||method.getReturnType().equals(Boolean.class))
+                                return (boolean) result;
+                        }
                     } catch (IllegalAccessException e) {
                         e.printStackTrace();
                     } catch (InvocationTargetException e) {
                         e.printStackTrace();
                     }
-                    return true;
+                    return false;
                 }
             });
     }

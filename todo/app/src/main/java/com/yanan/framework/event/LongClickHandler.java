@@ -18,19 +18,23 @@ public class LongClickHandler implements MethodHandler<LongClick> {
     @Override
     public void process(Activity activity, Object instance, Method method,LongClick click) {
         View view = ViewsHandler.getView(activity,click.value());
+        final Synchronized synchronised = method.getAnnotation(Synchronized.class);
             view.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    try{
-                        Object result =  ReflectUtils.invokeMethod(instance,method,view);
-                        if(method.getReturnType().equals(boolean.class)||method.getReturnType().equals(Boolean.class))
-                            return (boolean) result;
+                    boolean required = synchronised != null ?  EventContext.require(Click.class,view) : false;
+                    try {
+                        if(required){
+                            Object result =  ReflectUtils.invokeMethod(instance,method,view);
+                            if(method.getReturnType().equals(boolean.class)||method.getReturnType().equals(Boolean.class))
+                                return (boolean) result;
+                        }
                     } catch (IllegalAccessException e) {
                         e.printStackTrace();
                     } catch (InvocationTargetException e) {
                         e.printStackTrace();
                     }
-                    return true;
+                    return false;
                 }
             });
     }

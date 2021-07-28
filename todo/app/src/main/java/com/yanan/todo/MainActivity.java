@@ -18,6 +18,8 @@ import com.chaychan.library.BottomBarLayout;
 import com.yanan.framework.StringHolder;
 import com.yanan.framework.classhandler.Theme;
 import com.yanan.framework.event.BindEvent;
+import com.yanan.framework.event.EventContext;
+import com.yanan.framework.event.Synchronized;
 import com.yanan.framework.fieldhandler.BindFragment;
 import com.yanan.framework.fieldhandler.MainFragment;
 import com.yanan.framework.fieldhandler.SqlLite;
@@ -35,6 +37,7 @@ import com.yanan.todo.ui.TestFragment;
 import com.yanan.util.ReflectUtils;
 
 import java.sql.SQLData;
+
 
 @ContextView(R.layout.activity_main)
 @NoActionBar
@@ -68,7 +71,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Plugin.inject(this);
         Toast.makeText(getApplication(),app_names,Toast.LENGTH_LONG);
-        fragmentManager.popBackStack(null,1);
         Log.d(TAG,"软件名称:"+app_name+","+app_names);
     }
     @AfterInjected
@@ -76,12 +78,14 @@ public class MainActivity extends AppCompatActivity {
         Log.d("YA_NAN_PLUGIN","test method");
         System.err.println("YA_NAN");
     }
+    @Synchronized
     @Click(R.id.fab)
     public void onFloatClick(View view){
         if(toast != null)
             toast.cancel();
         toast = Toast.makeText(getApplicationContext(),"浮动按钮点击",Toast.LENGTH_SHORT);
         toast.show();
+//        EventContext.completedEvent();
         startActivity(new Intent(this,FormActivity.class));
     }
     @Click(R.id.fragment)
