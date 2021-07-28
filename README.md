@@ -30,6 +30,7 @@
    * Touch
    * Message 绑定消息
    * UserHandler 使用Handler的方式调用方法（与Message同时使用可以更新试图）
+   * Synchronized 修饰 事件类型（包括Click,Drag,LongClick,Touch）用以提供防重复触发事件的功能,需要调用EventContext.completedEvent()去完成事件之后才能再次触发事件
    
 ## API
 * Plugin.inject(Activity activity) 注入activtiy
@@ -43,6 +44,7 @@
 * MessageBus.push() 消息同步推送相关api
 * MessageBus.pushAsync() 异步推送消息相关api
 * MessageBus.reject() 拒绝接收当前消息
+* EventContext.completedEvent() 当一个方法为Click，Drag等调用且使用Synchronized修饰的方式是，使用此方法完成当前事件，否则此类方法只能被调用一次
 ## 扩展
 1. 定义注解
 2. 依据注解类型实现各自的接口
