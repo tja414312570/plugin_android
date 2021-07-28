@@ -141,7 +141,7 @@ public class StringHolder {
     	int start = 0;
 		int index = -1;
 		while((index = express.indexOf("{",index+1)) != -1  ) {
-			if(express.charAt(index-1) == '\\') 
+			if(express.charAt(index-1) == '\\')
 				continue;
 			if(index > start)
 				tokenList.add(new Token(express.substring(start,index),null,null,null,Token.STRING));

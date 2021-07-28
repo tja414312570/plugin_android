@@ -23,6 +23,7 @@ import com.amap.api.maps.model.LatLng;
 import com.scwang.smart.refresh.footer.ClassicsFooter;
 import com.scwang.smart.refresh.header.ClassicsHeader;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
+import com.yanan.framework.event.Click;
 import com.yanan.framework.fieldhandler.BindAdapter;
 import com.yanan.framework.fieldhandler.Service;
 import com.yanan.framework.methodhandler.AfterInjected;
@@ -171,7 +172,7 @@ public class MainFragment extends Fragment {
                         + aMapLocation.getErrorCode() + ", errInfo:"
                         + aMapLocation.getErrorInfo());
 
-                Toast.makeText(getContext(), "定位失败", Toast.LENGTH_LONG).show();
+//                Toast.makeText(getContext(), "定位失败", Toast.LENGTH_LONG).show();
             }
         }
     }

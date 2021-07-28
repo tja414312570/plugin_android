@@ -1,9 +1,11 @@
 package com.yanan.todo;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
@@ -14,10 +16,12 @@ import androidx.fragment.app.FragmentTransaction;
 import com.chaychan.library.BottomBarItem;
 import com.chaychan.library.BottomBarLayout;
 import com.yanan.framework.StringHolder;
+import com.yanan.framework.classhandler.Theme;
 import com.yanan.framework.event.BindEvent;
 import com.yanan.framework.fieldhandler.BindFragment;
 import com.yanan.framework.fieldhandler.MainFragment;
 import com.yanan.framework.fieldhandler.SqlLite;
+import com.yanan.framework.fieldhandler.Values;
 import com.yanan.framework.message.MessageBus;
 import com.yanan.framework.methodhandler.AfterInjected;
 import com.yanan.framework.classhandler.ContextView;
@@ -51,24 +55,34 @@ public class MainActivity extends AppCompatActivity {
     private com.yanan.todo.ui.MainFragment homeFragment;
     @Value(R.string.app_name) //获取资源数据
     private String app_name;
-
+    @Values("hello \\{{app_name}\\}") //获取资源数据
+    private String app_names;
     @SqlLite("test.db")
     private SQLiteDatabase sqLiteDatabase;
     private String stringHolderTest;
+    @Service
+    private Intent intent;
     Toast toast;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Plugin.inject(this);
-        String app = StringHolder.decodeString("hello world {app_name}");
-        Toast.makeText(getApplication(),app,Toast.LENGTH_LONG);
+        Toast.makeText(getApplication(),app_names,Toast.LENGTH_LONG);
         fragmentManager.popBackStack(null,1);
-        Log.d(TAG,"软件名称:"+app_name+","+app);
+        Log.d(TAG,"软件名称:"+app_name+","+app_names);
     }
     @AfterInjected
     public void onInited(){
         Log.d("YA_NAN_PLUGIN","test method");
         System.err.println("YA_NAN");
+    }
+    @Click(R.id.fab)
+    public void onFloatClick(View view){
+        if(toast != null)
+            toast.cancel();
+        toast = Toast.makeText(getApplicationContext(),"浮动按钮点击",Toast.LENGTH_SHORT);
+        toast.show();
+        startActivity(new Intent(this,FormActivity.class));
     }
     @Click(R.id.fragment)
     public void onItemSelected(FrameLayout view){
