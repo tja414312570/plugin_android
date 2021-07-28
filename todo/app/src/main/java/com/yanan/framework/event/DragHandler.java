@@ -19,13 +19,11 @@ public class DragHandler implements MethodHandler<Drag> {
     @Override
     public void process(Activity activity, Object instance, Method method,Drag click) {
             View view = ViewsHandler.getView(activity,click.value());
-            final Synchronized synchronised = method.getAnnotation(Synchronized.class);
             view.setOnDragListener(new View.OnDragListener() {
                 @Override
                 public boolean onDrag(View v, DragEvent event) {
-                    boolean required = synchronised != null ?  EventContext.require(Click.class,view) : false;
                     try {
-                        if(required){
+                        if(EventContext.require(activity,instance,method,click,v)){
                             Object result =  ReflectUtils.invokeMethod(instance,method,view,event);
                             if(method.getReturnType().equals(boolean.class)||method.getReturnType().equals(Boolean.class))
                                 return (boolean) result;

@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d("YA_NAN_PLUGIN","test method");
         System.err.println("YA_NAN");
     }
-    @Synchronized
+    @Synchronized("请勿重复点击")
     @Click(R.id.fab)
     public void onFloatClick(View view){
         if(toast != null)

@@ -42,7 +42,7 @@ public class FormActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Plugin.inject(this);
-        EventContext.completedEvent();
+//        EventContext.completedEvent();
         Toast.makeText(getApplication(),app_names,Toast.LENGTH_SHORT).show();
 
     }

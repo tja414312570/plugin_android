@@ -8,4 +8,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD} )
 public @interface Synchronized {
+    String value() default "";
+    String callback() default "";
 }

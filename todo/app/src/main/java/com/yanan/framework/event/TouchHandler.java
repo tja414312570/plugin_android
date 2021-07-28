@@ -17,15 +17,13 @@ public class TouchHandler implements MethodHandler<Touch> {
         Plugin.register(Touch.class,new TouchHandler());
     }
     @Override
-    public void process(Activity activity, Object instance, Method method,Touch event) {
-        View view = ViewsHandler.getView(activity,event.value());
-        final Synchronized synchronised = method.getAnnotation(Synchronized.class);
+    public void process(Activity activity, Object instance, Method method,Touch touch) {
+        View view = ViewsHandler.getView(activity,touch.value());
             view.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
-                    boolean required = synchronised != null ?  EventContext.require(Click.class,view) : false;
                     try {
-                        if(required){
+                        if(EventContext.require(activity,instance,method,touch,v)){
                             Object result =  ReflectUtils.invokeMethod(instance,method,view,event);
                             if(method.getReturnType().equals(boolean.class)||method.getReturnType().equals(Boolean.class))
                                 return (boolean) result;
