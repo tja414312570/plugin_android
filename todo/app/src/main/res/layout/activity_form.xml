@@ -7,6 +7,7 @@
     android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/text_form"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -21,7 +22,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="1dp"
-                android:text="手机号"
+                android:text="提醒类型"
                 android:textSize="14dp"/>
             <View
                 android:layout_width="1dip"
@@ -33,7 +34,7 @@
                 android:layout_toRightOf="@id/textview1"/>
             <EditText
                 android:id="@+id/editTextTextPersonName"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
                 android:textSize="14dp"
@@ -44,29 +45,107 @@
                 android:inputType="textPersonName"
                 android:hint="请输入手机号" />
         </RelativeLayout>
-
-
-
-
-
-        <MultiAutoCompleteTextView
-            android:id="@+id/multiAutoCompleteTextView"
+        <RelativeLayout
             android:layout_width="match_parent"
+            android:layout_margin="14dp"
             android:layout_height="wrap_content"
-            android:text="多行自动完成文本" />
+            android:background="@drawable/ic_edit_text_background">
+            <TextView
+                android:id="@+id/textview2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="1dp"
+                android:text="提醒时间"
+                android:textSize="14dp"/>
+            <View
+                android:layout_width="1dip"
+                android:layout_height="14dp"
+                android:layout_centerVertical="true"
+                android:background="#eeefff"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_toRightOf="@id/textview2"/>
+            <EditText
+                android:id="@+id/editTextTextPersonName2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp"
+                android:textSize="14dp"
+                android:padding="1dp"
+                android:layout_toRightOf="@id/textview2"
+                android:background="@drawable/ic_edit_text_background"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:hint="请输入手机号" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_margin="14dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_edit_text_background">
+            <TextView
+                android:id="@+id/textview3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="1dp"
+                android:text="动作"
+                android:textSize="14dp"/>
+            <View
+                android:layout_width="1dip"
+                android:layout_height="14dp"
+                android:layout_centerVertical="true"
+                android:background="#eeefff"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_toRightOf="@id/textview3"/>
+            <EditText
+                android:id="@+id/editTextTextPersonName3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp"
+                android:textSize="14sp"
+                android:padding="1dp"
+                android:layout_toRightOf="@id/textview3"
+                android:background="@drawable/ic_edit_text_background"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:hint="请输入手机号"
+                android:layout_marginStart="2dp" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_margin="14dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_edit_text_background">
+            <TextView
+                android:id="@+id/textview4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="1dp"
+                android:text="备注"
+                android:textSize="14dp"/>
+            <View
+                android:layout_width="1dip"
+                android:layout_height="14dp"
+                android:layout_centerVertical="true"
+                android:background="#eeefff"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_toRightOf="@id/textview4"/>
+            <MultiAutoCompleteTextView
+                android:id="@+id/multiAutoCompleteTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp"
+                android:textSize="14dp"
+                android:padding="1dp"
+                android:layout_toRightOf="@id/textview4"
+                android:background="@drawable/ic_edit_text_background"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:hint="请输入手机号" />
+        </RelativeLayout>
 
-        <EditText
-            android:id="@+id/editTextTextPassword"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPassword" />
-        <EditText
-            android:id="@+id/editTextPhone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="phone" />
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"

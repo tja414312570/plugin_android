@@ -5,7 +5,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,6 +29,7 @@ import com.yanan.framework.fieldhandler.SqlLite;
 import com.yanan.framework.fieldhandler.Value;
 import com.yanan.framework.fieldhandler.Values;
 import com.yanan.framework.fieldhandler.Views;
+import com.yanan.framework.form.FormContext;
 import com.yanan.framework.message.MessageBus;
 import com.yanan.framework.methodhandler.AfterInjected;
 import com.yanan.todo.ui.TestFragment;
@@ -38,6 +41,8 @@ public class FormActivity extends AppCompatActivity {
 
     @Values("hello \\{{app_name}\\}") //获取资源数据
     private String app_names;
+    @Views(R.id.text_form)
+    private ViewGroup viewGroup;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,7 +53,13 @@ public class FormActivity extends AppCompatActivity {
     }
     @Click(R.id.button)
     public void onButtonClick(View view){
-        Toast.makeText(getApplication(),app_names+" 按钮点击",Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getApplication()," 提交按钮点击",Toast.LENGTH_SHORT).show();
+        FormContext formContext = FormContext.getFormContext(viewGroup);
+        Toast.makeText(getApplication()," 表单内容"+formContext.toString(),Toast.LENGTH_SHORT).show();
     }
-
+    @Override
+    protected void onDestroy() {
+        EventContext.completedEvent();
+        super.onDestroy();
+    }
 }

@@ -6,11 +6,14 @@ import com.yanan.util.ReflectUtils;
 import com.yanan.util.asserts.Assert;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class RResourceHelper {
     final static Map<String,Class<?>> resourceClassCache = new HashMaps<>();
+    final static Map<Integer,String> resourceIntegerMap = new HashMap<>();
     public static int getResourceId(String attr, String name) {
         check();
         Class<?> clazz = resourceClassCache.get(attr);
@@ -24,7 +27,22 @@ public class RResourceHelper {
         }
         return 0;
     }
-
+    public static String getResourceName(String attr, Integer id) {
+        check();
+        Class<?> clazz = resourceClassCache.get(attr);
+        Assert.isNotNull(clazz,"could not get attr "+attr+" at R class");
+        try {
+            if(resourceIntegerMap.isEmpty()){
+                Field[] fields = clazz.getFields();
+                for(Field field : fields)
+                    resourceIntegerMap.put(ReflectUtils.getFieldValue(field,clazz),field.getName());
+            }
+            return resourceIntegerMap.get(id);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
     private synchronized static void check() {
         if(resourceClassCache == null || resourceClassCache.isEmpty()){
             try {
