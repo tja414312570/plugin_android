@@ -55,6 +55,7 @@ public class FormActivity extends AppCompatActivity {
     public void onButtonClick(View view){
 //        Toast.makeText(getApplication()," 提交按钮点击",Toast.LENGTH_SHORT).show();
         FormContext formContext = FormContext.getFormContext(viewGroup);
+        formContext = FormContext.getFormContext(R.layout.activity_form);
         Toast.makeText(getApplication()," 表单内容"+formContext.toString(),Toast.LENGTH_SHORT).show();
     }
     @Override
