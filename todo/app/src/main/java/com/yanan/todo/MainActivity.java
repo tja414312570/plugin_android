@@ -1,8 +1,6 @@
 package com.yanan.todo;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -15,14 +13,15 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.chaychan.library.BottomBarItem;
 import com.chaychan.library.BottomBarLayout;
-import com.yanan.framework.StringHolder;
-import com.yanan.framework.classhandler.Theme;
+import com.yanan.framework.dto.DtoContext;
+import com.yanan.framework.dto.SqlFragmentManager;
+import com.yanan.framework.dto.entry.WrapperMapping;
+import com.yanan.framework.dto.fragment.SqlFragment;
+import com.yanan.framework.dto.mapper.PreparedSql;
 import com.yanan.framework.event.BindEvent;
-import com.yanan.framework.event.EventContext;
 import com.yanan.framework.event.Synchronized;
 import com.yanan.framework.fieldhandler.BindFragment;
 import com.yanan.framework.fieldhandler.MainFragment;
-import com.yanan.framework.fieldhandler.SqlLite;
 import com.yanan.framework.fieldhandler.Values;
 import com.yanan.framework.message.MessageBus;
 import com.yanan.framework.methodhandler.AfterInjected;
@@ -35,8 +34,14 @@ import com.yanan.framework.fieldhandler.Views;
 import com.yanan.framework.event.Click;
 import com.yanan.todo.ui.TestFragment;
 import com.yanan.util.ReflectUtils;
+import com.yanan.util.xml.XMLHelper;
 
-import java.sql.SQLData;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.xml.parsers.SAXParserFactory;
 
 
 @ContextView(R.layout.activity_main)
@@ -60,8 +65,6 @@ public class MainActivity extends AppCompatActivity {
     private String app_name;
     @Values("hello \\{{app_name}\\}") //获取资源数据
     private String app_names;
-    @SqlLite("test.db")
-    private SQLiteDatabase sqLiteDatabase;
     private String stringHolderTest;
     @Service
     private Intent intent;
@@ -70,6 +73,22 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Plugin.inject(this);
+        SqlFragmentManager sqlFragment = DtoContext.getSqlFragmentManager(R.xml.test);
+        System.err.println(sqlFragment);
+        Map<String,String> params = new HashMap<String,String>();
+        params.put("id", "test username");
+        params.put("name", "test usex");
+
+        List<Object> objectList = new ArrayList<>();
+        objectList.add(params);
+        params = new HashMap<String,String>();
+        params.put("id", "test username");
+        params.put("name", "test usex");
+        objectList.add(params);
+
+        SqlFragment sqlFragment1 = sqlFragment.getSqlFragment("TestSql.insert");
+        PreparedSql preparedSql = sqlFragment1.getPreparedSql(objectList);
+        System.err.println(preparedSql);
         Toast.makeText(getApplication(),app_names,Toast.LENGTH_LONG);
         Log.d(TAG,"软件名称:"+app_name+","+app_names);
     }

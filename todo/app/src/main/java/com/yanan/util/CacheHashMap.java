@@ -224,7 +224,7 @@ public class CacheHashMap<K, V> extends HashMaps<Object, Object> {
 //		if(getNodes(hash(key), key) == null) {
 //			System.err.println(key);
 //		}
-		return (e = getNodes(hash(key), key)) == null ? null : (V) referenceToObj(this.referenceValClass, e.value);
+		return (e = getNode(hash(key), key)) == null ? null : (V) referenceToObj(this.referenceValClass, e.value);
 	}
 
 	/**
@@ -287,7 +287,7 @@ public class CacheHashMap<K, V> extends HashMaps<Object, Object> {
 	 * @return 节点
 	 */
 	@SuppressWarnings("unchecked")
-	Node<Object, Object> getNodes(int hash, Object key) {
+	Node<Object, Object> getNode(int hash, Object key) {
 		Node<Object, Object>[] tab;
 		Node<Object, Object> first, e;
 		int n;

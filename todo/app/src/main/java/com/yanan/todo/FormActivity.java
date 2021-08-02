@@ -1,39 +1,30 @@
 package com.yanan.todo;
 
-import android.content.Intent;
+import android.content.res.XmlResourceParser;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
-import com.chaychan.library.BottomBarItem;
-import com.chaychan.library.BottomBarLayout;
 import com.yanan.framework.Plugin;
 import com.yanan.framework.classhandler.ContextView;
 import com.yanan.framework.classhandler.NoActionBar;
-import com.yanan.framework.event.BindEvent;
 import com.yanan.framework.event.Click;
 import com.yanan.framework.event.EventContext;
-import com.yanan.framework.fieldhandler.BindFragment;
-import com.yanan.framework.fieldhandler.MainFragment;
+import com.yanan.framework.fieldhandler.SQLite;
 import com.yanan.framework.fieldhandler.Service;
-import com.yanan.framework.fieldhandler.SqlLite;
-import com.yanan.framework.fieldhandler.Value;
 import com.yanan.framework.fieldhandler.Values;
 import com.yanan.framework.fieldhandler.Views;
 import com.yanan.framework.form.FormContext;
-import com.yanan.framework.message.MessageBus;
-import com.yanan.framework.methodhandler.AfterInjected;
-import com.yanan.todo.ui.TestFragment;
-import com.yanan.util.ReflectUtils;
+import com.yanan.todo.dto.DemoDto;
+import com.yanan.util.xml.XMLHelper;
+
+import org.xmlpull.v1.XmlPullParserException;
+
+import java.io.IOException;
 
 @NoActionBar
 @ContextView(R.layout.activity_form)
@@ -43,20 +34,25 @@ public class FormActivity extends AppCompatActivity {
     private String app_names;
     @Views(R.id.text_form)
     private ViewGroup viewGroup;
+    @SQLite("test.db")
+    private SQLiteDatabase sqLiteDatabase;
+    @Service
+    private DemoDto demoDto;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Plugin.inject(this);
-//        EventContext.completedEvent();
         Toast.makeText(getApplication(),app_names,Toast.LENGTH_SHORT).show();
 
     }
     @Click(R.id.button)
-    public void onButtonClick(View view){
-//        Toast.makeText(getApplication()," 提交按钮点击",Toast.LENGTH_SHORT).show();
+    public void onButtonClick(View view) throws IOException, XmlPullParserException {
+
         FormContext formContext = FormContext.getFormContext(viewGroup);
-        formContext = FormContext.getFormContext(R.layout.activity_form);
+        formContext = FormContext.getFormContext(R.id.text_form);
         Toast.makeText(getApplication()," 表单内容"+formContext.toString(),Toast.LENGTH_SHORT).show();
+        demoDto.insert(formContext.toMap());
+        sqLiteDatabase.execSQL("CREATE TABLE person (_id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR, age SMALLINT)");
     }
     @Override
     protected void onDestroy() {
