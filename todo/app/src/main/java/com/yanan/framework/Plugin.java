@@ -77,7 +77,7 @@ public class Plugin {
             Constructor<?> constructor = ExtReflectUtils.getEffectiveConstructor(clazz,args);
             instance = constructor.newInstance(args);
             Singleton singleton = clazz.getAnnotation(Singleton.class);
-            if(singleton == null || !singleton.value())
+            if(singleton == null || singleton.value())
                 Plugin.setInstance(clazz,instance);
             if(clazz.getAnnotation(AutoInject.class) != null || injected){
                 Plugin.inject((Activity) currentActivity.get(),instance);
