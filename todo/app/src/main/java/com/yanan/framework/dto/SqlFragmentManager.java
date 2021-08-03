@@ -11,6 +11,17 @@ import java.util.Map;
 public class SqlFragmentManager {
     private Map<String, WrapMapping> wrapMapping = new HashMap<>();
     Map<String, BaseMapping> wrapMap = new HashMap<>();
+
+    public String getNamespace() {
+        return namespace;
+    }
+
+    private String namespace;
+
+    public SqlFragmentManager(String namespace) {
+        this.namespace = namespace;
+    }
+
     public void addWarp(SqlFragment sqlFragment){
         String namespace = sqlFragment.getBaseMapping().getWrapperMapping().getNamespace();
         WrapMapping wrapperMapping = wrapMapping.get(namespace);

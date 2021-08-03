@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <wrapper namespace="com.yanan.todo.dto.DemoDto">
 
-	<!--<sql id="tablename">student</sql>-->
+	<sql id="create">
+		CREATE TABLE IF NOT EXISTS test(id integer primary key,name varchar(20))
+	</sql>
 <!--	<select id="test" resultType="map">-->
 <!--		SELECT * FROM yanan_account.test-->
 <!--		<trim prefix = "where" prefixoverride="and or" suffix="" suffixoverride="and or">-->

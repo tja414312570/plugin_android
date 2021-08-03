@@ -12,4 +12,6 @@ import java.lang.annotation.Target;
 public @interface SQLite {
     String value();
     int mode() default Context.MODE_PRIVATE;
+    String test() default "";
+    String creator() default "";
 }

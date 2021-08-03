@@ -1,28 +1,16 @@
 package com.yanan.todo.dto;
 
-import com.yanan.framework.dto.Label;
 import com.yanan.framework.dto.annotations.Param;
 import com.yanan.framework.dto.annotations.SQL;
-import com.yanan.framework.dto.annotations.SQLFragment;
-import com.yanan.framework.dto.annotations.Table;
 import com.yanan.framework.dto.annotations.Xml;
 import com.yanan.framework.fieldhandler.SQLite;
 import com.yanan.todo.R;
-import com.yanan.util.xml.XmlResource;
 
 import java.util.List;
-import java.util.Map;
 
-@Table(test="",creator="CREATE TABLE IF NOT EXISTS account(uid integer primary key,uname varchar(20),mobile varchar(20))")
-@SQLite("test")
 @SQL(id="column",value = "(key,uname,mobile)")
 @SQL(id="values",value = "(#{key},#{uname},#{mobile})")
-@SQLFragment({
-        "select * from {table} where",
-        "{trim('','','','')",
-        "   {if(id != null){id = #{id}}}",
-        "}"
-})
+@SQLite(value = "test",creator = "{com.yanan.todo.dto.DemoDto.creator}")
 @Xml(R.xml.test)
 public interface DemoDto {
     @SQL(id="column",value = "(key,uname,mobile)")
