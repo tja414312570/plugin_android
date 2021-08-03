@@ -25,6 +25,10 @@ import com.yanan.util.xml.XMLHelper;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @NoActionBar
 @ContextView(R.layout.activity_form)
@@ -43,7 +47,17 @@ public class FormActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Plugin.inject(this);
         Toast.makeText(getApplication(),app_names,Toast.LENGTH_SHORT).show();
+        Map<String,String> params = new HashMap<String,String>();
+        params.put("id", "test username");
+        params.put("name", "test usex");
 
+        List<Object> objectList = new ArrayList<>();
+        objectList.add(params);
+        params = new HashMap<String,String>();
+        params.put("id", "test username");
+        params.put("name", "test usex");
+        objectList.add(params);
+        demoDto.insert(objectList);
     }
     @Click(R.id.button)
     public void onButtonClick(View view) throws IOException, XmlPullParserException {
@@ -51,7 +65,7 @@ public class FormActivity extends AppCompatActivity {
         FormContext formContext = FormContext.getFormContext(viewGroup);
         formContext = FormContext.getFormContext(R.id.text_form);
         Toast.makeText(getApplication()," 表单内容"+formContext.toString(),Toast.LENGTH_SHORT).show();
-        demoDto.insert(formContext.toMap());
+//        demoDto.insert(formContext.toMap());
         sqLiteDatabase.execSQL("CREATE TABLE person (_id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR, age SMALLINT)");
     }
     @Override

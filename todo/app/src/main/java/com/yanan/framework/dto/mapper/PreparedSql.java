@@ -64,8 +64,7 @@ public class PreparedSql {
 	public <T> T queryOne() throws SQLException {
 		//获取事物
 		try {
-			Log.d("PREP_SQL","prepared sql:" + this.sql);
-			Log.d("PREP_SQL","prepared parameter:" + this.parameter);
+
 			PreparedStatement ps = null;
 			Iterator<Object> collect = parameter.iterator();
 			this.preparedParameter(ps, collect);

@@ -53,7 +53,7 @@ public class RhinoScriptEngine implements ScriptEngine {
 		}catch (EcmaError e) {
 			throw new ScriptException(e.getMessage()+script,e.getLineSource(),e.getLineNumber(), e.getColumnNumber());
 		}catch (Exception e){
-			throw new ScriptException(e.getMessage()+script,e);
+			throw new ScriptException(e.getMessage()+" script:"+script,e);
 		}
 		
 	}

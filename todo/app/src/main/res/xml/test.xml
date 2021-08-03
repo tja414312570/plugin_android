@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<wrapper namespace="TestSql">
+<wrapper namespace="com.yanan.todo.dto.DemoDto">
 
 	<!--<sql id="tablename">student</sql>-->
 <!--	<select id="test" resultType="map">-->
@@ -15,7 +15,7 @@
 		insert into test ( id , name ) values 
 		<foreach collection="list" index="index" item = "item" open="" separator="," close="">
 			<if test = "item.id != null">
-				( ${item.id} , #{item.name} )
+				( '${item.id}' , '${item.name}' )
 			</if>
 		</foreach>
 	</insert>

@@ -47,10 +47,12 @@ public class ForEachFragment extends FragmentSet implements FragmentBuilder {
 				binder.put(this.forEach.getIndex(),i);
 				binder.put(this.forEach.getCollection(), param);
 				PreparedFragment child = this.childSet.prepared(binder);
-				if(!child.getSql().trim().equals("")&&!child.getVariable().isEmpty()){
+				if(!child.getSql().trim().equals("")){
 					sb.append(" ").append(child.getSql()).append(" ");
 					if (i + 1 < param.size())
 						sb.append(forEach.getSeparator());
+				}
+				if(!child.getVariable().isEmpty()){
 					preparedFragment.addAllVariable(child.getVariable());
 				}
 			}
@@ -69,10 +71,12 @@ public class ForEachFragment extends FragmentSet implements FragmentBuilder {
 				binder.put(this.forEach.getIndex(),i);
 				binder.put(this.forEach.getCollection(), param);
 				PreparedFragment child = this.childSet.prepared(binder);
-				if(!child.getSql().trim().equals("")&&!child.getVariable().isEmpty()){
+				if(!child.getSql().trim().equals("")){
 					sb.append(" ").append(child.getSql()).append(" ");
 					if (i + 1 < param.size())
 						sb.append(forEach.getSeparator());
+				}
+				if(!child.getVariable().isEmpty()){
 					preparedFragment.addAllVariable(child.getVariable());
 				}
 			}

@@ -75,20 +75,11 @@ public class MainActivity extends AppCompatActivity {
         Plugin.inject(this);
         SqlFragmentManager sqlFragment = DtoContext.getSqlFragmentManager(R.xml.test);
         System.err.println(sqlFragment);
-        Map<String,String> params = new HashMap<String,String>();
-        params.put("id", "test username");
-        params.put("name", "test usex");
 
-        List<Object> objectList = new ArrayList<>();
-        objectList.add(params);
-        params = new HashMap<String,String>();
-        params.put("id", "test username");
-        params.put("name", "test usex");
-        objectList.add(params);
-
-        SqlFragment sqlFragment1 = sqlFragment.getSqlFragment("TestSql.insert");
-        PreparedSql preparedSql = sqlFragment1.getPreparedSql(objectList);
-        System.err.println(preparedSql);
+//
+//        SqlFragment sqlFragment1 = sqlFragment.getSqlFragment("TestSql.insert");
+//        PreparedSql preparedSql = sqlFragment1.getPreparedSql(objectList);
+//        System.err.println(preparedSql);
         Toast.makeText(getApplication(),app_names,Toast.LENGTH_LONG);
         Log.d(TAG,"软件名称:"+app_name+","+app_names);
     }
