@@ -73,8 +73,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Plugin.inject(this);
-        SqlFragmentManager sqlFragment = DtoContext.getSqlFragmentManager(R.xml.test);
-        System.err.println(sqlFragment);
+//        SqlFragmentManager sqlFragment = DtoContext.getSqlFragmentManager(R.xml.test);
+//        System.err.println(sqlFragment);
 
 //
 //        SqlFragment sqlFragment1 = sqlFragment.getSqlFragment("TestSql.insert");

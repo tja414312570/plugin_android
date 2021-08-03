@@ -40,6 +40,8 @@ public class SelectorFragment extends SqlFragment implements FragmentBuilder {
 		// 去掉外面的标签,并重组sql语句,不能删除空格
 		int index = sql.indexOf(SPLITPREFIX);
 		int endex = sql.lastIndexOf(SUFFIX);
+		if(endex == -1)
+			endex = sql.length();
 		sql = sql.substring(index + 1, endex);
 		// 建立一个临时的FragmentSet
 		FragmentSet currentFragmentSet;

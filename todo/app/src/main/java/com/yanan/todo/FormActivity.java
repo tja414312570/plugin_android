@@ -57,7 +57,7 @@ public class FormActivity extends AppCompatActivity {
         params.put("id", "test username");
         params.put("name", "test usex");
         objectList.add(params);
-        demoDto.insert(objectList);
+        demoDto.insert2(objectList);
     }
     @Click(R.id.button)
     public void onButtonClick(View view) throws IOException, XmlPullParserException {

@@ -29,19 +29,6 @@ public class DtoHandler<T> implements InstanceHandler<T> {
     }
     @Override
     public T instance(Activity activity, Class<T> instanceType) {
-        SQLite sqLite = instanceType.getAnnotation(SQLite.class);
-        Log.d("DTO_HANDLER",instanceType.getName()+sqLite.toString());
-        Object instance = null;
-        SQLiteDatabase sqLiteDatabase = activity.openOrCreateDatabase(sqLite.value(),sqLite.mode(),null);
-        Xml xml = instanceType.getAnnotation(Xml.class);
-        if(xml != null) {
-            SqlFragmentManager sqlFragmentManager = DtoContext.getSqlFragmentManager(xml.value());
-        }
-
-        SqlFragmentManager sqlFragmentManager = DtoContext.getSqlFragmentManager(instanceType);
-        SqlSession sqlSession = new DefaultSqlSessionExecuter(sqLiteDatabase,sqlFragmentManager);
-        InvocationHandler proxy = new DtoProxy(activity,instanceType,sqlFragmentManager,sqlSession);
-        instance = Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[]{instanceType},proxy);
-        return (T) instance;
+        return DtoContext.createDtoProxyInstance(activity, instanceType);
     }
 }

@@ -122,6 +122,7 @@ public class StringHolder {
 					StringHolderProvider stringHolderProvider = holderMap.get(token.getAttr());
 					if(stringHolderProvider != null)
 						value = stringHolderProvider.getValue(token.getName(),token.getAttr(),token.getArgs(),token.getToken());
+					else throw new RuntimeException("could not found string holder for attr " +token.getAttr()+" for express "+express);
 				}else{
 					for (StringHolderProvider stringHolderProvider : holderMap.values()) {
 						if ((value = stringHolderProvider.getValue(token.getName(), token.getAttr(),token.getArgs(), token.getToken())) != null)
@@ -141,13 +142,13 @@ public class StringHolder {
     	int start = 0;
 		int index = -1;
 		while((index = express.indexOf("{",index+1)) != -1  ) {
-			if(express.charAt(index-1) == '\\')
+			if(index > 1 && express.charAt(index-1) == '\\')
 				continue;
 			if(index > start)
 				tokenList.add(new Token(express.substring(start,index),null,null,null,Token.STRING));
 			int endex = index;
 			while((endex = express.indexOf("}",endex))!=-1){
-				if(express.charAt(endex-1) == '\\') 
+				if(index > 1 && express.charAt(endex-1) == '\\')
 					continue;
 				break;
 			}
@@ -164,8 +165,8 @@ public class StringHolder {
 					continue;
 				}
 				if(token.charAt(i)=='@' && foundAt == -1) {
-					attr = token.substring(i+1);
-					name = token.substring(0,i);
+					attr = token.substring(i+1,token.length()-1);
+					name = token.substring(1,i);
 					foundAt = i;
 				}
 				if(token.charAt(i)==':' && foundAt != -1) {

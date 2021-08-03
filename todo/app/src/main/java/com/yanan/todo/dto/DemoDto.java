@@ -11,12 +11,10 @@ import java.util.List;
 @SQL(id="column",value = "(key,uname,mobile)")
 @SQL(id="values",value = "(#{key},#{uname},#{mobile})")
 @SQLite(value = "test",creator = "{com.yanan.todo.dto.DemoDto.creator}")
-@Xml(R.xml.test)
+//@Xml(R.xml.test)
 public interface DemoDto {
-    @SQL(id="column",value = "(key,uname,mobile)")
-    public String column(String tokenizer);
-    @SQL("insert account #{column} value #{values}")
+    @SQL("insert into account {{column}} values {{values}}")
     public void insert(@Param("key") String key, @Param("uname") String uname, @Param("mobile")String mobile);
-    @SQL("insert account {column} value {values}")
-    public void insert(@Param("list") List<Object> map);
+    @SQL("insert into account {{column}} values {{values}}")
+    public void insert2(@Param("list") List<Object> map);
 }

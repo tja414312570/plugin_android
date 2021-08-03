@@ -19,7 +19,12 @@ public class ResourceStringHolder implements StringHolderProvider {
         Resources resource = contextThemeWrapper.getResources();
         if(StringUtil.isEmpty(args))
             args = "string";
-        return resource.getString(RResourceHelper.getResourceId(args,key));
-    }
+        try{
+            return resource.getString(RResourceHelper.getResourceId(args,key));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
 
+    }
 }
