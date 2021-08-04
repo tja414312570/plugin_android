@@ -79,13 +79,15 @@ public class DtoProxy implements InvocationHandler {
         Map<String,Object> parameter = new HashMap<>();
         Class<?>[] paramTypes = method.getParameterTypes();
         Annotation[][] parameterAnnotations = method.getParameterAnnotations();
+        if(paramTypes.length == 1 && getAnnotation(Param.class,parameterAnnotations[0]) == null)
+            return args[0];
         for(int i = 0;i<paramTypes.length;i++){
             Annotation[] annotations = parameterAnnotations[i];
             Param param = getAnnotation(Param.class,annotations);
             String paramName;
             if(param == null){
                 if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.O) {
-                    throw new RuntimeException("please use @Param annotation to point params name");
+                    paramName = "arg"+i;
                 }else{
                     paramName = method.getParameters()[i].getName();
                 }

@@ -1,18 +1,21 @@
 package com.yanan.framework.dto.mapper;
 
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import com.yanan.framework.dto.DtoContext;
 import com.yanan.framework.dto.SqlExecuteException;
 import com.yanan.framework.dto.SqlFragmentManager;
 import com.yanan.framework.dto.SqlSession;
 import com.yanan.framework.dto.fragment.SqlFragment;
+import com.yanan.framework.dto.orm.DefaultOrmBuilder;
+import com.yanan.framework.dto.orm.OrmBuilder;
 import com.yanan.util.ParameterUtils;
 import com.yanan.util.ReflectUtils;
 
 import java.lang.reflect.Field;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -90,35 +93,47 @@ public class DefaultSqlSessionExecuter implements SqlSession{
 			}
 			return paramMap;
 		}else
-			return params == null ? null:params[0];
+			return params == null || params.length == 0 ? null:params[0];
 	}
 	/**
 	 * 从数据库中查询结果集，需要从mapper中定义返回类型，返回类型为一个list或其实现类。
 	 * 除非为java基础数据类型和String，否则参数只有第一个有效，无须再mapper中定义参数类型
 	 */
 	@Override
-	public <T> List<T> selectList(String sqlId, Object... params) {
-		Object parameter = checkParams(params);
-		SqlFragment frag = sqlFragmentManager.getSqlFragment(sqlId);
-		PreparedSql pre = frag.getPreparedSql(parameter);
-		try {
-			return pre.query();
-		} catch (SQLException e) {
-			throw new SqlExecuteException("faild to execute query \""+sqlId+"\"",e);
-		}
-	}
-	@Override
-	public <T> T insert(String sqlId, Object... parameters) {
+	public <T> List<T> selectList(String sqlId, Object... parameters) {
 		Object parameter = checkParams(parameters);
 		SqlFragment frag = sqlFragmentManager.getSqlFragment(sqlId);
 		PreparedSql pre = frag.getPreparedSql(parameter);
 		try {
 			Log.d("PREP_SQL","prepared sql:" + pre.getSql());
 			Log.d("PREP_SQL","prepared parameter:" + pre.getParameter());
-			this.sqLiteDatabase.execSQL(pre.getSql());
-			return pre.insert();
-		} catch (SQLException e) {
-			throw new SqlExecuteException("faild to execute query \""+sqlId+"\"",e);
+			String[] args = new String[pre.getParameter().size()];
+			for(int i = 0;i<pre.getParameter().size();i++){
+				args[i] = String.valueOf(pre.getParameter().get(i));
+			}
+			Cursor cursor = this.sqLiteDatabase.rawQuery(pre.getSql(),args);
+			OrmBuilder<Cursor> ormBuilder = new DefaultOrmBuilder();
+
+			return (List<T>) ormBuilder.builder(cursor,frag);
+		} catch (android.database.SQLException e) {
+			throw new SqlExecuteException("faild to execute query \""+sqlId+"\" "+pre.getSql() +" params "+pre.getParameter(),e);
+		}
+	}
+	@Override
+	public <T> boolean insert(String sqlId, Object... parameters) {
+		Object parameter = checkParams(parameters);
+		SqlFragment frag = sqlFragmentManager.getSqlFragment(sqlId);
+		PreparedSql pre = frag.getPreparedSql(parameter);
+		try {
+			Log.d("PREP_SQL","prepared sql:" + pre.getSql());
+			Log.d("PREP_SQL","prepared parameter:" + pre.getParameter());
+			this.sqLiteDatabase.execSQL(pre.getSql(),pre.getParameter().toArray());
+//			Method method = this.sqLiteDatabase.getClass().getMethod("executeSql",String.class,new Object[]{}.getClass());
+//			int result = (int) ReflectUtils.invokeMethod(this.sqLiteDatabase,method,pre.getSql(),pre.getParameter().toArray(new Object[]{}));
+//			int result = this.sqLiteDatabase.executeSql(pre.getSql(),pre.getParameter().toArray(new Object[]{}));
+			return true;
+		} catch (android.database.SQLException e) {
+			throw new SqlExecuteException("faild to execute query \""+sqlId+"\" "+pre.getSql() +" params "+pre.getParameter(),e);
 		}
 	}
 	@Override
@@ -127,25 +142,37 @@ public class DefaultSqlSessionExecuter implements SqlSession{
 		return null;
 	}
 	@Override
-	public <T> T update(String sqlId, Object... parameters) {
+	public <T> boolean update(String sqlId, Object... parameters) {
 		Object parameter = checkParams(parameters);
 		SqlFragment frag = sqlFragmentManager.getSqlFragment(sqlId);
 		PreparedSql pre = frag.getPreparedSql(parameter);
 		try {
-			return pre.update();
-		} catch (SQLException e) {
-			throw new SqlExecuteException("faild to execute query \""+sqlId+"\"",e);
+			Log.d("PREP_SQL","prepared sql:" + pre.getSql());
+			Log.d("PREP_SQL","prepared parameter:" + pre.getParameter());
+			this.sqLiteDatabase.execSQL(pre.getSql(),pre.getParameter().toArray());
+//			Method method = this.sqLiteDatabase.getClass().getMethod("executeSql",String.class,new Object[]{}.getClass());
+//			int result = (int) ReflectUtils.invokeMethod(this.sqLiteDatabase,method,pre.getSql(),pre.getParameter().toArray(new Object[]{}));
+//			int result = this.sqLiteDatabase.executeSql(pre.getSql(),pre.getParameter().toArray(new Object[]{}));
+			return true;
+		} catch (android.database.SQLException e) {
+			throw new SqlExecuteException("faild to execute query \""+sqlId+"\" "+pre.getSql() +" params "+pre.getParameter(),e);
 		}
 	}
 	@Override
-	public int delete(String sqlId, Object... parameters) {
+	public boolean delete(String sqlId, Object... parameters) {
 		Object parameter = checkParams(parameters);
 		SqlFragment frag = sqlFragmentManager.getSqlFragment(sqlId);
 		PreparedSql pre = frag.getPreparedSql(parameter);
 		try {
-			return pre.update();
-		} catch (SQLException e) {
-			throw new SqlExecuteException("faild to execute query \""+sqlId+"\"",e);
+			Log.d("PREP_SQL","prepared sql:" + pre.getSql());
+			Log.d("PREP_SQL","prepared parameter:" + pre.getParameter());
+			this.sqLiteDatabase.execSQL(pre.getSql(),pre.getParameter().toArray());
+//			Method method = this.sqLiteDatabase.getClass().getMethod("executeSql",String.class,new Object[]{}.getClass());
+//			int result = (int) ReflectUtils.invokeMethod(this.sqLiteDatabase,method,pre.getSql(),pre.getParameter().toArray(new Object[]{}));
+//			int result = this.sqLiteDatabase.executeSql(pre.getSql(),pre.getParameter().toArray(new Object[]{}));
+			return true;
+		} catch (android.database.SQLException e) {
+			throw new SqlExecuteException("faild to execute query \""+sqlId+"\" "+pre.getSql() +" params "+pre.getParameter(),e);
 		}
 	}
 

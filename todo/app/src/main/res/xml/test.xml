@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <wrapper namespace="com.yanan.todo.dto.DemoDto">
 
-	<sql id="create">
+	<sql id="creator">
 		CREATE TABLE IF NOT EXISTS test(id integer primary key,name varchar(20))
 	</sql>
 <!--	<select id="test" resultType="map">-->

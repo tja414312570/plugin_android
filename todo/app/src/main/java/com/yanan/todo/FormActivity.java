@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -42,22 +43,14 @@ public class FormActivity extends AppCompatActivity {
     private SQLiteDatabase sqLiteDatabase;
     @Service
     private DemoDto demoDto;
+    @Views(R.id.sql_test)
+    private TextView textView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Plugin.inject(this);
         Toast.makeText(getApplication(),app_names,Toast.LENGTH_SHORT).show();
-        Map<String,String> params = new HashMap<String,String>();
-        params.put("id", "test username");
-        params.put("name", "test usex");
 
-        List<Object> objectList = new ArrayList<>();
-        objectList.add(params);
-        params = new HashMap<String,String>();
-        params.put("id", "test username");
-        params.put("name", "test usex");
-        objectList.add(params);
-        demoDto.insert2(objectList);
     }
     @Click(R.id.button)
     public void onButtonClick(View view) throws IOException, XmlPullParserException {
@@ -65,8 +58,19 @@ public class FormActivity extends AppCompatActivity {
         FormContext formContext = FormContext.getFormContext(viewGroup);
         formContext = FormContext.getFormContext(R.id.text_form);
         Toast.makeText(getApplication()," 表单内容"+formContext.toString(),Toast.LENGTH_SHORT).show();
-//        demoDto.insert(formContext.toMap());
-        sqLiteDatabase.execSQL("CREATE TABLE person (_id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR, age SMALLINT)");
+        Map<String,Object> params = new HashMap<String,Object>();
+        params.put("id", "test username");
+        params.put("name", "test usex");
+
+        List<Object> objectList = new ArrayList<>();
+        objectList.add(params);
+        params = new HashMap<String,Object>();
+//        params.put("id", (int)System.currentTimeMillis());
+        params.put("name", "test name "+System.currentTimeMillis());
+        objectList.add(params);
+        demoDto.insert3(params);
+        System.err.println(demoDto.query());
+        textView.setText(demoDto.query().toString());
     }
     @Override
     protected void onDestroy() {

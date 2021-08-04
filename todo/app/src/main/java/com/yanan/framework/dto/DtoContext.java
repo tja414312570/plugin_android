@@ -19,11 +19,13 @@ import com.yanan.framework.dto.mapper.DefaultSqlSessionExecuter;
 import com.yanan.framework.dto.proxy.DtoProxy;
 import com.yanan.framework.fieldhandler.SQLite;
 import com.yanan.todo.R;
+import com.yanan.util.ReflectUtils;
 import com.yanan.util.StringUtil;
 import com.yanan.util.xml.XMLHelper;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -105,8 +107,8 @@ public class DtoContext {
                     baseMapping.setNode("insert");
                 else if(sql.value().toLowerCase(Locale.ROOT).trim().startsWith("update"))
                     baseMapping.setNode("update");
-                else if(sql.value().toLowerCase(Locale.ROOT).trim().startsWith("query"))
-                    baseMapping.setNode("query");
+                else if(sql.value().toLowerCase(Locale.ROOT).trim().startsWith("select"))
+                    baseMapping.setNode("select");
                 else if(sql.value().toLowerCase(Locale.ROOT).trim().startsWith("delete"))
                     baseMapping.setNode("delete");
                 else
@@ -120,7 +122,9 @@ public class DtoContext {
                     int endex = xml.indexOf("}}",index);
                     if(endex == -1)
                         throw new RuntimeException("not string holder end symbol");
-                    String holder = namespace+"."+xml.substring(index+2,endex);
+                    String holder = xml.substring(index+2,endex);
+                    if(!holder.contains("."))
+                        holder = namespace+"."+holder;
                     String suffix = xml.substring(endex+2);
                     holder = sqlFragmentManager.getWrapper(holder).getXml();
                     if(holder == null)
@@ -131,6 +135,12 @@ public class DtoContext {
                 baseMapping.setValue(xml);
                 baseMapping.setXml(xml);
                 baseMapping.setContent(xml);
+                Class<?> returnType = method.getReturnType();
+                if(ReflectUtils.implementsOf(returnType,List.class))
+                    returnType = (Class<?>) ((ParameterizedType)method.getGenericReturnType()).getActualTypeArguments()[0];
+                if(returnType.equals(void.class))
+                    returnType = null;
+                baseMapping.setResultType(returnType == null? null:returnType.getName());
                 bind(sqlFragmentManager,baseMapping,wrapperMapping);
             }
         }
@@ -164,6 +174,7 @@ public class DtoContext {
 
        Log.d("DTO_CTX","build " + mapping.getNode().toUpperCase() + " wrapper fragment , wrapper id : \""
                 + mapping.getWrapperMapping().getNamespace() + "." + mapping.getId() + "\" ,ref : "+mapping.getWrapperMapping().isRef());
+       System.err.println(mapping);
         sqlFragment = (SqlFragment) fragmentBuilder;
         if(!mapping.getWrapperMapping().isRef() || mapping.getParentMapping() != null) {
             fragmentBuilder.build(mapping);
@@ -186,6 +197,19 @@ public class DtoContext {
         SQLiteDatabase sqLiteDatabase = activity.openOrCreateDatabase(sqLite.value(),sqLite.mode(),null);
         SqlFragmentManager sqlFragmentManager = DtoContext.getSqlFragmentManager(instanceType);
         SqlSession sqlSession = new DefaultSqlSessionExecuter(sqLiteDatabase,sqlFragmentManager);
+        if(!StringUtil.isEmpty(sqLite.creator())){
+            String sql = sqLite.creator();
+            if(sqLite.creator().startsWith("{{")){
+                String sqlId = sqLite.creator().substring(2,sqLite.creator().length()-2);
+                if(!sqlId.contains("."))
+                    sqlId = sqlFragmentManager.getNamespace()+"."+sqlId;
+                Log.d("DTO_CTX","建表sql id:"+sqlId);
+                sqlSession.update(sqlId);
+            }else{
+                Log.d("DTO_CTX","建表sql:"+sql);
+                sqLiteDatabase.execSQL(sql,new Object[]{});
+            }
+        }
         InvocationHandler proxy = new DtoProxy(activity,instanceType,sqlFragmentManager,sqlSession);
         return (T) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[]{instanceType},proxy);
     }
