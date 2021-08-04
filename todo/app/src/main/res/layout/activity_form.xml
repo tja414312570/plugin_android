@@ -22,7 +22,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="1dp"
-                android:text="提醒类型"
+                android:text="手机号"
                 android:textSize="14dp"/>
             <View
                 android:layout_width="1dip"
@@ -33,7 +33,7 @@
                 android:layout_marginRight="2dp"
                 android:layout_toRightOf="@id/textview1"/>
             <EditText
-                android:id="@+id/editTextTextPersonName"
+                android:id="@+id/phone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
@@ -55,7 +55,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="1dp"
-                android:text="提醒时间"
+                android:text="姓名"
                 android:textSize="14dp"/>
             <View
                 android:layout_width="1dip"
@@ -66,8 +66,8 @@
                 android:layout_marginRight="2dp"
                 android:layout_toRightOf="@id/textview2"/>
             <EditText
-                android:id="@+id/editTextTextPersonName2"
-                android:layout_width="wrap_content"
+                android:id="@+id/name"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
                 android:textSize="14dp"
@@ -76,7 +76,7 @@
                 android:background="@drawable/ic_edit_text_background"
                 android:ems="10"
                 android:inputType="textPersonName"
-                android:hint="请输入手机号" />
+                android:hint="请输入姓名" />
         </RelativeLayout>
         <RelativeLayout
             android:layout_width="match_parent"
@@ -99,7 +99,7 @@
                 android:layout_marginRight="2dp"
                 android:layout_toRightOf="@id/textview3"/>
             <EditText
-                android:id="@+id/editTextTextPersonName3"
+                android:id="@+id/action"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
@@ -109,7 +109,7 @@
                 android:background="@drawable/ic_edit_text_background"
                 android:ems="10"
                 android:inputType="textPersonName"
-                android:hint="请输入手机号"
+                android:hint="请输入动作"
                 android:layout_marginStart="2dp" />
         </RelativeLayout>
         <RelativeLayout
@@ -133,7 +133,7 @@
                 android:layout_marginRight="2dp"
                 android:layout_toRightOf="@id/textview4"/>
             <MultiAutoCompleteTextView
-                android:id="@+id/multiAutoCompleteTextView"
+                android:id="@+id/note"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
@@ -143,19 +143,20 @@
                 android:background="@drawable/ic_edit_text_background"
                 android:ems="10"
                 android:inputType="textPersonName"
-                android:hint="请输入手机号" />
+                android:hint="请输入备注" />
         </RelativeLayout>
 
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:gravity="center_vertical">
 
         <Button
             android:id="@+id/button"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:paddingLeft="50dp"
             android:paddingRight="50dp"
             android:layout_height="wrap_content"
@@ -164,12 +165,37 @@
             android:text="提交"
             tools:layout_editor_absoluteX="128dp"
             tools:layout_editor_absoluteY="570dp" />
-
+        <Button
+            android:layout_marginLeft="10dp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:id="@+id/button_delete"
+            android:paddingLeft="50dp"
+            android:paddingRight="50dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:text="清空"
+            tools:layout_editor_absoluteX="128dp"
+            tools:layout_editor_absoluteY="570dp" />
 
     </LinearLayout>
-    <TextView
-        android:id="@+id/sql_test"
+    <com.scwang.smart.refresh.layout.SmartRefreshLayout
+        android:id="@+id/refreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="数据库测试"/>
+        android:layout_height="0dp"
+        android:layout_weight="1">
+        <com.scwang.smart.refresh.header.ClassicsHeader
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:overScrollMode="never"
+            android:background="#fff" />
+        <com.scwang.smart.refresh.footer.ClassicsFooter
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </com.scwang.smart.refresh.layout.SmartRefreshLayout>
 </LinearLayout>

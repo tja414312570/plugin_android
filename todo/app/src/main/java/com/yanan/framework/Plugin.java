@@ -128,7 +128,7 @@ public class Plugin {
 
     public static void injectMethod(Activity context, Object instance) {
         Class<?> classes = instance.getClass();
-        Method[] methods = classes.getMethods();
+        Method[] methods =ReflectUtils.getAllMethods(classes);
         for(Method method : methods){
             Annotation[] annotations = method.getAnnotations();
             for(Annotation annotation : annotations){

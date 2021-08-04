@@ -20,13 +20,7 @@ public class ViewsHandler implements FieldHandler<Views> {
     }
     @Override
     public void process(Activity activity,Object instance, Field field, Views views) {
-        View view = null;
-        if(viewThreadLocal.get() != null){
-            view = viewThreadLocal.get().findViewById(views.value());
-        }
-        if(view == null){
-            view = activity.findViewById(views.value());
-        }
+        View view = getView(activity,views.value());
         Log.d(getClass().getSimpleName(),field+"==>"+view);
         if(view == null && views.required())
             throw new NullPointerException("view "+views.value()+" not found");

@@ -32,10 +32,13 @@ import com.yanan.framework.Plugin;
 import com.yanan.framework.event.BindEvent;
 import com.yanan.framework.fieldhandler.Views;
 import com.yanan.framework.fieldhandler.ViewsHandler;
+import com.yanan.todo.dto.DemoDto;
 import com.yanan.todo.ui.adapter.MainRecycleViewAdapter;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 public class MainFragment extends Fragment {
     private static final String TAG = "MAIN_FRAGMENT";
@@ -49,25 +52,36 @@ public class MainFragment extends Fragment {
     @BindAdapter(R.id.recyclerView)
     @Service
     private MainRecycleViewAdapter mainRecycleViewAdapter;
+    @Service
+    private DemoDto demoDto;
     private AMap aMap;
     private AMapLocationClient mLocationClient;
     private AMapLocationClientOption mLocationClientOption;
+    private List<Map> resultMap ;
     private boolean isFirstLoc = true;
     @BindEvent(view = R.id.refreshLayout,event="OnRefreshListener")
     public void onRefresh(RefreshLayout refreshlayout){
         Log.d(TAG,"下拉刷新:"+refreshlayout);
-        refreshlayout.finishRefresh(2000/*,false*/);//传入false表示刷新失败
+        resultMap.clear();
+        resultMap.addAll(demoDto.query());
+        mainRecycleViewAdapter.notifyDataSetChanged();
+        refreshlayout.finishRefresh(true/*,false*/);//传入false表示刷新失败
     }
     @BindEvent(view = R.id.refreshLayout,event="OnLoadMoreListener")
     public void onLoadMore(RefreshLayout refreshlayout){
         Log.d(TAG,"上拉加载:"+refreshlayout);
-        refreshlayout.finishLoadMore(2000/*,false*/);//传入false表示刷新失败
+        resultMap.clear();
+        resultMap.addAll(demoDto.query());
+        mainRecycleViewAdapter.notifyDataSetChanged();
+        refreshlayout.finishLoadMore(true/*,false*/);//传入false表示刷新失败
     }
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_main,container,false);
         ViewsHandler.setViewContext(view);
         Plugin.inject(this);
+        resultMap = demoDto.query();
+        mainRecycleViewAdapter.setDemoList(resultMap);
         mMapView.onCreate(savedInstanceState);
         refreshLayout.setRefreshHeader(new ClassicsHeader(getContext()));
         refreshLayout.setRefreshFooter(new ClassicsFooter(getContext()));

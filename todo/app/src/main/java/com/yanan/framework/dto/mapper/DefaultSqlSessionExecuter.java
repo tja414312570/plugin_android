@@ -41,14 +41,10 @@ public class DefaultSqlSessionExecuter implements SqlSession{
 	 */
 	@Override
 	public <T> T selectOne(String sqlId, Object... parameters) {
-		Object parameter = checkParams(parameters);
-		SqlFragment frag = sqlFragmentManager.getSqlFragment(sqlId);
-		PreparedSql pre = frag.getPreparedSql(parameter);
-		try {
-			return pre.queryOne();
-		} catch (SQLException e) {
-			throw new SqlExecuteException("faild to execute query \""+sqlId+"\"",e);
-		}
+		List<T> resultList = selectList(sqlId,parameters);
+		if (resultList.size() > 1)
+			throw new SqlExecuteException("query result rows should \"1\" but has \"" + resultList.size() + "\"");
+		return (T) (resultList.size() == 1 ? resultList.get(0) : null);
 	}
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Object checkParams(Object... params) {

@@ -13,8 +13,12 @@ import com.yanan.framework.fieldhandler.AutoInject;
 import com.yanan.framework.fieldhandler.Service;
 import com.yanan.framework.fieldhandler.ViewsHandler;
 import com.yanan.todo.R;
+import com.yanan.todo.dto.DemoDto;
 
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
+import java.util.Map;
 
 @AutoInject
 public class MainRecycleViewAdapter extends RecyclerView.Adapter<MainRecycleViewHolder> {
@@ -22,24 +26,38 @@ public class MainRecycleViewAdapter extends RecyclerView.Adapter<MainRecycleView
     private Context context;
     @Service
     private LayoutInflater layoutInflater;
+
+    public List<Map> getDemoList() {
+        return demoList;
+    }
+
+    public void setDemoList(List<Map> demoList) {
+        this.demoList = demoList;
+    }
+
+    private List<Map> demoList;
     @NonNull
     @NotNull
     @Override
     public MainRecycleViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
-//        View view = layoutInflater.inflate(R.layout.item_empty,parent,false);
-//        ViewsHandler.setViewContext(view);
-//        return Plugin.createInstance(MainRecycleViewHolder.class,true,view);
-        return new MainRecycleViewHolder(layoutInflater.inflate(R.layout.item_empty,parent,false));
+        return new MainRecycleViewHolder(layoutInflater.inflate(R.layout.item_activity_from,parent,false));
     }
 
     @Override
     public void onBindViewHolder(@NonNull @NotNull MainRecycleViewHolder holder, int position) {
-
+        if(position == 0){
+            if(demoList.size() == 0)
+                holder.empty();
+            else
+                holder.title();
+        }else{
+            holder.draw(demoList.get(position-1));
+        }
     }
 
 
     @Override
     public int getItemCount() {
-        return 1;
+        return demoList.size()+1;
     }
 }

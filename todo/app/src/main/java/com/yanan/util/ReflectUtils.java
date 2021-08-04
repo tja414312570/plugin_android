@@ -141,9 +141,9 @@ public class ReflectUtils {
 	 * @throws NoSuchMethodException ex
 	 * @throws SecurityException     ex
 	 */
-	public static Method[] getAllMethods(Class<?> targetClass) throws NoSuchMethodException, SecurityException {
+	public static Method[] getAllMethods(Class<?> targetClass) {
 		List<Method> list = new ArrayList<>();
-		while (targetClass != null && !targetClass.equals(Object.class)) {
+		while (targetClass != null && !targetClass.getName().startsWith("android")) {
 			Method[] methods = targetClass.getDeclaredMethods();
 			Collections.addAll(list, methods);
 			targetClass = targetClass.getSuperclass();
