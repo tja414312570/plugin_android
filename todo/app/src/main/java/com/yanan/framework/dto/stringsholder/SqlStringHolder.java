@@ -1,10 +1,9 @@
 package com.yanan.framework.dto.stringsholder;
 
-import com.yanan.framework.StringHolderProvider;
 import com.yanan.framework.StringHolder;
+import com.yanan.framework.StringHolderProvider;
 import com.yanan.framework.dto.DtoContext;
 import com.yanan.framework.dto.SqlFragmentManager;
-import com.yanan.framework.dto.entry.BaseMapping;
 import com.yanan.framework.dto.fragment.SqlFragment;
 
 public class SqlStringHolder implements StringHolderProvider {

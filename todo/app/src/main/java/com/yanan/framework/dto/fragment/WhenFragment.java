@@ -1,13 +1,12 @@
 package com.yanan.framework.dto.fragment;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.yanan.framework.Plugin;
 import com.yanan.framework.dto.DtoContext;
-import com.yanan.framework.dto.entry.Var;
 import com.yanan.framework.dto.entry.When;
 import com.yanan.framework.fieldhandler.Singleton;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Singleton(false)
 public class WhenFragment extends FragmentSet implements FragmentBuilder {

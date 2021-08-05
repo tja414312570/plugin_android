@@ -1,7 +1,6 @@
 package com.yanan.framework.dto.proxy;
 
 import android.app.Activity;
-import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.yanan.framework.dto.SqlExecuteException;
@@ -14,7 +13,6 @@ import com.yanan.util.ReflectUtils;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -72,7 +70,7 @@ public class DtoProxy implements InvocationHandler {
     /**
      * 查询参数是否有注解，有Param注解则将参数组装成Map返回。
      * @param method method handler
-     * @param args
+     * @param args method param
      * @return instance
      */
     public Object decodeParameters(Method method, Object[] args) {

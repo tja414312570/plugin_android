@@ -33,7 +33,7 @@
                 android:layout_marginRight="2dp"
                 android:layout_toRightOf="@id/textview1"/>
             <EditText
-                android:id="@+id/phone"
+                android:id="@+id/mobile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"

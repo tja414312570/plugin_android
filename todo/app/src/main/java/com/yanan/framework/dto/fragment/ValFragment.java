@@ -2,10 +2,10 @@ package com.yanan.framework.dto.fragment;
 
 import com.yanan.framework.dto.DtoContext;
 import com.yanan.framework.dto.GeneralCache;
-import com.yanan.framework.dto.entry.Trim;
 import com.yanan.framework.dto.entry.Val;
 import com.yanan.framework.fieldhandler.Singleton;
 import com.yanan.util.asserts.Assert;
+
 @Singleton(false)
 public class ValFragment extends FragmentSet implements FragmentBuilder {
 	static {

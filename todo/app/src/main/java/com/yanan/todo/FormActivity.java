@@ -95,31 +95,21 @@ public class FormActivity extends AppCompatActivity {
     @Click(R.id.button_delete)
     public void onDeleteClick(View view){
         demoDto.delete();
-        refreshLayout.autoRefresh();
+        resultMap.clear();
+        resultMap.addAll(demoDto.query());
+        Log.d(TAG,"加载后的数据"+resultMap);
+        mainRecycleViewAdapter.notifyDataSetChanged();
     }
     @Click(R.id.button)
     public void onButtonClick(View view) throws IOException, XmlPullParserException {
-
         FormContext formContext = FormContext.getFormContext(viewGroup);
         formContext = FormContext.getFormContext(R.id.text_form);
         Toast.makeText(getApplication()," 表单内容"+formContext.toString(),Toast.LENGTH_SHORT).show();
-        Map<String,Object> params = new HashMap<String,Object>();
-        params.put("id", "test username");
-        params.put("name", "test usex");
-
-        List<Object> objectList = new ArrayList<>();
-        objectList.add(params);
-        params = new HashMap<String,Object>();
-//        params.put("id", (int)System.currentTimeMillis());
-        params.put("name", formContext.get(R.id.name));
-        params.put("mobile", formContext.get(R.id.phone));
-        params.put("action", formContext.get(R.id.action));
-        params.put("note", formContext.get(R.id.note));
-        objectList.add(params);
-        demoDto.insert3(params);
-        System.err.println(demoDto.query());
-        refreshLayout.autoRefresh();
-//        textView.setText(demoDto.query().toString());
+        demoDto.insert3(formContext.toMap());
+        resultMap.clear();
+        resultMap.addAll(demoDto.query());
+        Log.d(TAG,"加载后的数据"+resultMap);
+        mainRecycleViewAdapter.notifyDataSetChanged();
     }
     @Override
     protected void onDestroy() {

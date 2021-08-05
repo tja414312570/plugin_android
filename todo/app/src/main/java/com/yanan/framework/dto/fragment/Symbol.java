@@ -1,7 +1,7 @@
 package com.yanan.framework.dto.fragment;
 
 public interface Symbol {
-	public static enum JAVASCRIPT{
+	enum JAVASCRIPT{
 		FULL_EQS("==="),PLUS_EQ("+="),SUB_EQ("-="),MULTI_EQ("*="),DIV_EQ("/="),REMA_EQ("%="),
 		EQS("=="),NOT_EQS("!="),AUTO_PLUS("++"),AUTO_SUB("--"),BIG_EQS(">="),SMALL_EQS("<="),
 		PLUS("+"),SUB("-"),MULTI("*"),DIV("/"),REMA("%"),

@@ -21,7 +21,7 @@ public class WrapMapping {
 		super();
 		this.namespace = namespace;
 	}
-	public void addSqlFragemnt(SqlFragment sqlFragment){
+	public void addSqlFragment(SqlFragment sqlFragment){
 		String id = sqlFragment.getId();
 		SqlFragment frag = wrapps.get(id);
 		if(frag!=null)

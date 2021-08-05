@@ -5,7 +5,6 @@ import com.yanan.util.xml.Ignore;
 import com.yanan.util.xml.LineNumber;
 import com.yanan.util.xml.Tag;
 import com.yanan.util.xml.Value;
-import com.yanan.util.xml.XmlResource;
 
 import java.util.List;
 

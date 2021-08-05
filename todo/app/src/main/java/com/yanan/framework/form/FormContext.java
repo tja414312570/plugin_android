@@ -3,11 +3,16 @@ package com.yanan.framework.form;
 import android.app.Activity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.google.gson.Gson;
 import com.yanan.framework.Plugin;
 import com.yanan.framework.RResourceHelper;
+import com.yanan.framework.fieldhandler.Views;
 import com.yanan.framework.fieldhandler.ViewsHandler;
+import com.yanan.util.xml.Entry;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -33,6 +38,18 @@ public class FormContext {
         findForm(formContext,viewGroup);
         return formContext;
     }
+
+    public static void bindView(Map map, View contextView) {
+       Iterator<Map.Entry> entryIterator = map.entrySet().iterator();
+       while(entryIterator.hasNext()){
+           Map.Entry entry = entryIterator.next();
+           String name = (String) entry.getKey();
+           String value = entry.getValue()+"";
+           TextView views = ViewsHandler.getView((Activity) Plugin.currentContext(),RResourceHelper.getResourceId("id",name));
+           views.setText(value);
+       }
+    }
+
     public <T> T get(Integer id){
         FormItem formItem = formItemMap.get(id);
         return (T) formItem.getFormHolder().get(formItem.getView());

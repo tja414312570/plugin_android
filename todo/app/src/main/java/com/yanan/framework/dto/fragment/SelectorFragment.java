@@ -5,7 +5,6 @@ import com.yanan.framework.dto.DtoContext;
 import com.yanan.framework.dto.entry.Default;
 import com.yanan.framework.dto.entry.SelectorMapping;
 import com.yanan.framework.dto.entry.TagSupport;
-import com.yanan.framework.dto.entry.Val;
 import com.yanan.framework.dto.mapper.PreparedSql;
 import com.yanan.framework.fieldhandler.Singleton;
 
@@ -65,7 +64,7 @@ public class SelectorFragment extends SqlFragment implements FragmentBuilder {
 				int predex = sql.indexOf(tag.getXml());
 				int len = tag.getXml().length();
 				String preffix = sql.substring(0, predex);
-				if (preffix != null && !preffix.trim().equals("")) {
+				if (!preffix.trim().equals("")) {
 					currentFragmentSet = Plugin.createInstance(DtoContext.getFragmentSet(Default.class),false);
 					currentFragmentSet.setXml(preffix);
 					currentFragmentSet.setValue(preffix);

@@ -15,7 +15,7 @@ import com.yanan.framework.dto.entry.TagSupport;
 import com.yanan.framework.dto.entry.WrapperMapping;
 import com.yanan.framework.dto.fragment.FragmentBuilder;
 import com.yanan.framework.dto.fragment.SqlFragment;
-import com.yanan.framework.dto.mapper.DefaultSqlSessionExecuter;
+import com.yanan.framework.dto.mapper.DefaultSqlSessionExecutor;
 import com.yanan.framework.dto.proxy.DtoProxy;
 import com.yanan.framework.fieldhandler.SQLite;
 import com.yanan.todo.R;
@@ -196,7 +196,7 @@ public class DtoContext {
         Log.d("DTO_HANDLER",instanceType.getName()+sqLite.toString());
         SQLiteDatabase sqLiteDatabase = activity.openOrCreateDatabase(sqLite.value(),sqLite.mode(),null);
         SqlFragmentManager sqlFragmentManager = DtoContext.getSqlFragmentManager(instanceType);
-        SqlSession sqlSession = new DefaultSqlSessionExecuter(sqLiteDatabase,sqlFragmentManager);
+        SqlSession sqlSession = new DefaultSqlSessionExecutor(sqLiteDatabase,sqlFragmentManager);
         if(!StringUtil.isEmpty(sqLite.creator())){
             String sql = sqLite.creator();
             if(sqLite.creator().startsWith("{{")){

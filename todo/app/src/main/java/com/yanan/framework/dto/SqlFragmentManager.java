@@ -29,7 +29,7 @@ public class SqlFragmentManager {
             wrapperMapping = new WrapMapping(namespace);
             wrapMapping.put(namespace,wrapperMapping);
         }
-        wrapperMapping.addSqlFragemnt(sqlFragment);
+        wrapperMapping.addSqlFragment(sqlFragment);
     }
     public SqlFragment getSqlFragment(String id){
         int symIndex = id.lastIndexOf(".");

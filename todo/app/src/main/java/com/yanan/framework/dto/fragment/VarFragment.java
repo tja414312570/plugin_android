@@ -4,7 +4,6 @@ package com.yanan.framework.dto.fragment;
 import com.yanan.framework.Plugin;
 import com.yanan.framework.dto.DtoContext;
 import com.yanan.framework.dto.GeneralCache;
-import com.yanan.framework.dto.entry.Val;
 import com.yanan.framework.dto.entry.Var;
 import com.yanan.framework.fieldhandler.Singleton;
 

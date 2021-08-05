@@ -5,7 +5,6 @@ import android.util.Log;
 import com.yanan.framework.dto.DtoContext;
 import com.yanan.framework.dto.SqlExecuteException;
 import com.yanan.framework.dto.entry.BaseMapping;
-import com.yanan.framework.dto.entry.IF;
 import com.yanan.framework.dto.entry.Include;
 import com.yanan.framework.fieldhandler.Singleton;
 

@@ -17,6 +17,7 @@ import com.yanan.framework.classhandler.ContextView;
 import com.yanan.framework.event.Click;
 import com.yanan.framework.fieldhandler.Views;
 import com.yanan.framework.fieldhandler.ViewsHandler;
+import com.yanan.framework.form.FormContext;
 import com.yanan.todo.R;
 import com.yanan.util.StringUtil;
 
@@ -26,19 +27,19 @@ import org.w3c.dom.Text;
 import java.util.Map;
 
 public class MainRecycleViewHolder extends RecyclerView.ViewHolder {
-    @Views(R.id.item_activity_from_name)
+    @Views(R.id.name)
     private TextView nameView;
-    @Views(R.id.item_activity_from_phone)
+    @Views(R.id.mobile)
     private TextView phoneView;
-    @Views(R.id.item_activity_from_action)
+    @Views(R.id.action)
     private TextView actionView;
-    @Views(R.id.item_activity_from_note)
+    @Views(R.id.note)
     private TextView noteView;
     @Views(R.id.data_view)
     private View dataView;
     @Views(R.id.empty_view)
     private View emptyView;
-    @Views(R.id.item_activity_from_id)
+    @Views(R.id.id)
     private TextView idView;
     @Views(0)
     private ConstraintLayout contextView;
@@ -52,18 +53,19 @@ public class MainRecycleViewHolder extends RecyclerView.ViewHolder {
         Log.d("MAIN_VIEW_HOLDER",textView.toString());
         Toast.makeText(Plugin.currentContext(),"上下文View点击",Toast.LENGTH_SHORT).show();
     }
-    @Click(R.id.item_activity_from_name)
+//    @Click(R.id.item_activity_from_name)
     public void onItemClick(TextView textView){
         Log.d("MAIN_VIEW_HOLDER",textView.getText()+"==>"+textView.toString());
         Toast.makeText(Plugin.currentContext(),"text view 点击",Toast.LENGTH_SHORT).show();
     }
 
     public void draw(Map map) {
-        idView.setText(get(map.get("id")));
-        nameView.setText(get(map.get("name")));
-        phoneView.setText(get(map.get("mobile")));
-        actionView.setText(get(map.get("action")));
-        noteView.setText(get(map.get("note")));
+        FormContext.bindView(map,contextView);
+//        idView.setText(get(map.get("id")));
+//        nameView.setText(get(map.get("name")));
+//        phoneView.setText(get(map.get("mobile")));
+//        actionView.setText(get(map.get("action")));
+//        noteView.setText(get(map.get("note")));
         emptyView.setVisibility(View.GONE);
         dataView.setVisibility(View.VISIBLE);
         contextView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT) );
@@ -82,6 +84,9 @@ public class MainRecycleViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void title() {
+        emptyView.setVisibility(View.GONE);
+        dataView.setVisibility(View.VISIBLE);
+        contextView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT) );
         idView.setText("ID");
         nameView.setText("姓名");
         phoneView.setText("电话");

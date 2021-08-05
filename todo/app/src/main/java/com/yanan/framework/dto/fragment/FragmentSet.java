@@ -4,7 +4,6 @@ import com.yanan.framework.Plugin;
 import com.yanan.framework.dto.DtoContext;
 import com.yanan.framework.dto.SqlExecuteException;
 import com.yanan.framework.dto.SqlFragmentManager;
-import com.yanan.framework.dto.entry.Case;
 import com.yanan.framework.dto.entry.Default;
 import com.yanan.framework.dto.entry.TagSupport;
 import com.yanan.framework.fieldhandler.Singleton;
@@ -12,15 +11,12 @@ import com.yanan.framework.javascript.Bindings;
 import com.yanan.framework.javascript.ScriptEngine;
 import com.yanan.framework.javascript.ScriptEngineManager;
 import com.yanan.framework.javascript.ScriptException;
-import com.yanan.util.ClassInfoCache;
 import com.yanan.util.ParameterUtils;
 import com.yanan.util.ReflectUtils;
 import com.yanan.util.StringUtil;
 
 import java.lang.reflect.InvocationTargetException;
-import java.sql.Ref;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -150,7 +146,7 @@ public class FragmentSet implements FragmentBuilder {
 	 */
 	public String preparedParameterSql(String sql, Object parameter) {
 		List<String> variable = StringUtil.find(sql, "${", "}");
-		if (variable != null && variable.size() > 0) {
+		if (variable.size() > 0) {
 			StringBuffer sb = new StringBuffer(sql).append(" ");
 			List<Object> arguments = this.preparedParameter(variable, parameter);
 			for (int i = 0; i < variable.size(); i++) {
@@ -181,34 +177,29 @@ public class FragmentSet implements FragmentBuilder {
 	public List<Object> preparedParameter(List<String> variables, Object parameter) {
 		List<Object> arguments = new ArrayList<Object>();
 		if (parameter != null && variables.size() > 0) {
-				Object object = parameter;
-				if(object instanceof Bindings){
+			if(parameter instanceof Bindings){
 					for(int i = 0;i<variables.size();i++){
 						try {
-							arguments.add(scriptEngine.eval(variables.get(i),(Bindings)object));
+							arguments.add(scriptEngine.eval(variables.get(i),(Bindings) parameter));
 						} catch (ScriptException e) {
 							throw new SqlExecuteException("failed to execute \"" + variables.get(i) + "\" expression! at id '" + this.sqlFragment.baseMapping.getId()
-									+ "' at item data " + object, e);
+									+ "' at item data " + parameter, e);
 						}
 					}
-				}else if (ParameterUtils.isBaseType(object.getClass())) {
+				}else if (ParameterUtils.isBaseType(parameter.getClass())) {
 					if (SqlFragment.removeDuplicate(variables).size() == 1)
 						for (int i = 0; i < variables.size(); i++)
-							arguments.add(object);
+							arguments.add(parameter);
 					else
 						throw new SqlExecuteException("failed to prepared parameter \"" + variables
 								+ "\"because the parameter size at last \""+variables.size()+"\"! at id '" + this.sqlFragment.baseMapping.getId() + "'");
 				} else {
 					//如果所需参数和准备的参数都只有一个时，直接赋值
-					if(variables.size() == 1 && object != null &&
-							ReflectUtils.implementsOf(object.getClass(), Map.class) &&
-							((Map) object).size() ==1) {
-							arguments.add(((Map) object).values().iterator().next());
+					if(variables.size() == 1 && ReflectUtils.implementsOf(parameter.getClass(), Map.class) && ((Map) parameter).size() == 1) {
+							arguments.add(((Map) parameter).values().iterator().next());
 					}else {
-						Iterator<String> iterator = variables.iterator();
-						while (iterator.hasNext()) {
-							String key = iterator.next();
-							Object value = this.decodeParameter(key,object);
+						for (String key : variables) {
+							Object value = this.decodeParameter(key, parameter);
 							arguments.add(value);
 						}
 					}
@@ -301,7 +292,7 @@ public class FragmentSet implements FragmentBuilder {
 				int predex = sql.indexOf(tag.getXml());
 				int len = tag.getXml().length();
 				String preffix = sql.substring(0, predex);
-				if (preffix != null && !preffix.trim().equals("")) {
+				if (!preffix.trim().equals("")) {
 					currentFragmentSet = Plugin.createInstance(DtoContext.getFragmentSet(Default.class),false);
 					currentFragmentSet.setXml(preffix);
 					currentFragmentSet.setValue(preffix);
@@ -330,7 +321,7 @@ public class FragmentSet implements FragmentBuilder {
 				currentFragmentSet.build(tag.getTags());
 				sql = sql.substring(predex + len);
 			}
-			if (sql != null && !sql.trim().equals("")) {
+			if (!sql.trim().equals("")) {
 				currentFragmentSet = Plugin.createInstance(DtoContext.getFragmentSet(Default.class),false);
 				currentFragmentSet.setXml(sql);
 				currentFragmentSet.setValue(sql);
@@ -359,23 +350,19 @@ public class FragmentSet implements FragmentBuilder {
 		}
 		vars = StringUtil.find(sqlTmp, "${", "}");
 		if (vars.size() > 0) {
-			for (int i = 0; i < vars.size(); i++) {
-				tempParams.add(vars.get(i));
-			}
+			tempParams.addAll(vars);
 		}
 		// 重组Sql参数集合
 		if (tempParams.size() != 0) {
 			Map<Integer, String> treeMap = new TreeMap<Integer, String>();
 			for (String var : tempParams) {
-				if (!treeMap.values().contains(var)) {
+				if (!treeMap.containsValue(var)) {
 					index = tempValue.indexOf(var);
 					treeMap.put(index, var);
 				}
 			}
-			Iterator<String> iterator = treeMap.values().iterator();
-			while (iterator.hasNext()){
-				String arg = iterator.next();
-				if(arg.indexOf(".")==-1 && arg.indexOf("[") == -1){
+			for (String arg : treeMap.values()) {
+				if (!arg.contains(".") && !arg.contains("[")) {
 					this.sqlFragment.addParameter(arg);
 				}
 			}
@@ -391,7 +378,7 @@ public class FragmentSet implements FragmentBuilder {
 			}
 			// 如果参数类型为Map
 			else if (ReflectUtils.implementsOf(object.getClass(), Map.class)) {
-				binder.putAll((Map<? extends String, ? extends Object>) object);
+				binder.putAll((Map<? extends String, ?>) object);
 				for(String key : argument) {
 					if(!binder.containsKey(key))
 						binder.put(key, null);
